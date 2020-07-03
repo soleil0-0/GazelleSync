@@ -33,7 +33,7 @@ class DicAPI:
 		self.authkey = None
 		self.passkey = None
 		self.userid = None
-		self.tracker = "https://tracker.dicmusic.club/"
+		self.tracker = "http://pt.kshare.club:34000/"
 		self.last_request = time.time()
 		self.rate_limit_cool_down = 10
 		self.rate_limit_max = 5
@@ -61,7 +61,7 @@ class DicAPI:
 
 	def _login(self):
 		"""Logs in user and gets authkey from server"""
-		loginpage = 'https://dicmusic.club/login.php'
+		loginpage = 'http://pt.kshare.club/login.php'
 		data = {'username': self.username,
 				'password': self.password}
 		r = self.session.post(loginpage, data=data)
@@ -73,13 +73,13 @@ class DicAPI:
 		self.userid = accountinfo['id']
 
 	def logout(self):
-		self.session.get("https://dicmusic.club/logout.php?auth=%s" % self.authkey)
+		self.session.get("http://pt.kshare.club/logout.php?auth=%s" % self.authkey)
 
 	def request(self, action, **kwargs):
 		"""Makes an AJAX request at a given action page"""
 		self._rate_limit()
 
-		ajaxpage = 'https://dicmusic.club/ajax.php'
+		ajaxpage = 'http://pt.kshare.club/ajax.php'
 		params = {'action': action}
 		if self.authkey:
 			params['auth'] = self.authkey
@@ -98,7 +98,7 @@ class DicAPI:
 	def request_html(self, action, **kwargs):
 		self._rate_limit()
 
-		ajaxpage = 'https://dicmusic.club/' + action
+		ajaxpage = 'http://pt.kshare.club/' + action
 		#print "Requesting", ajaxpage
 		if self.authkey:
 			kwargs['auth'] = self.authkey
@@ -110,7 +110,7 @@ class DicAPI:
 		"""Downloads the torrent at torrent_id using the authkey and passkey"""
 		self._rate_limit()
 
-		torrentpage = 'https://dicmusic.club/torrents.php'
+		torrentpage = 'http://pt.kshare.club/torrents.php'
 		params = {'action': 'download', 'id': torrent_id}
 		if self.authkey:
 			params['authkey'] = self.authkey
