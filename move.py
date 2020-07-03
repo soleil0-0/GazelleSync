@@ -11,6 +11,7 @@ from redapi import RedApi
 from whatapi import WhatAPI
 from nwapi import NwAPI
 from xanaxapi import XanaxAPI
+from dicapi import DicAPI
 from shutil import copyfile
 import bencode
 import constants
@@ -96,15 +97,24 @@ def st(inp):
 	return s.get_data()
 
 def strip_tags(inp):
-	OPSAPI = None
+	HTML2BBCODE_API = None
+
 	if sourceAPI.site == "OPS":
-		OPSAPI = sourceAPI
+		HTML2BBCODE_API = sourceAPI
 	elif destAPI.site == "OPS":
-		OPSAPI = destAPI
-	if OPSAPI is None:
+		HTML2BBCODE_API = destAPI
+
+	# 优先使用DIC的HTML2BBCODE服务
+	if sourceAPI.site == "DIC":
+		HTML2BBCODE_API = sourceAPI
+	elif destAPI.site == "DIC":
+		HTML2BBCODE_API = destAPI
+
+
+	if HTML2BBCODE_API is None:
 		return st(inp)
 	else:
-		return OPSAPI.HTMLtoBBCODE(inp)
+		return HTML2BBCODE_API.HTMLtoBBCODE(inp)
 
 def unescape(inp):
 	return html.unescape(inp)
@@ -139,9 +149,10 @@ compulsory = {
 }
 
 trackers = {
-	"apl",
+	"ops",
 	"red",
 	"nwcd",
+	"dic",
 }
 
 possible = {
@@ -196,7 +207,7 @@ def parseArguments(args):
 		raise Exception('Not all arguments are present.')
 
 	if not validateTrackers(result):
-		raise Exception("Trackers can only be RED, OPS, and NWCD")
+		raise Exception("Trackers can only be RED, OPS, NWCD, and DIC")
 
 	if ("tid" in result):
 		if not int(result["tid"]):
@@ -222,31 +233,39 @@ def generateSourceTrackerAPI(tracker):
 	if tracker == "red":
 		print("Source tracker is RED")
 		return RedApi(username=constants.RedUsername, password=constants.RedPassword)
-	elif tracker == "apl":
+	elif tracker == "ops":
 		print("Source tracker is OPS")
 		return XanaxAPI(username=constants.OrpheusUsername, password=constants.OrpheusPassword)
 	elif tracker == "nwcd":
 		print("Source tracker is NWCD")
 		return NwAPI(username=constants.NWCDUsername, password=constants.NWCDPassword)
+	elif tracker == "dic":
+		print("Source tracker is DIC")
+		return DicAPI(username=constants.DICUsername, password=constants.DICPassword)
 
 def generateDestinationTrackerAPI(tracker):
 	if tracker == "red":
 		print("Destination tracker is RED")
 		return WhatAPI(username=constants.RedUsername, password=constants.RedPassword, tracker = "https://flacsfor.me/{0}/announce", url = "https://redacted.ch/", site = "RED")
-	elif tracker == "apl":
+	elif tracker == "ops":
 		print("Destination tracker is OPS")
 		return WhatAPI(username=constants.OrpheusUsername, password=constants.OrpheusPassword, tracker = "https://home.opsfet.ch/{0}/announce", url = "https://orpheus.network/", site = "OPS")
 	elif tracker == "nwcd":
 		print("Destination tracker is NWCD")
 		return WhatAPI(username=constants.NWCDUsername, password=constants.NWCDPassword, tracker = "https://definitely.notwhat.cd:443/{0}/announce", url = "https://notwhat.cd/", site = "NWCD")
+	elif tracker == "dic":
+		print("Destination tracker is DIC")
+		return WhatAPI(username=constants.DICUsername, password=constants.DICPassword, tracker = "http://tracker.dicmusic.club:34000/{0}/announce", url = "https://dicmusic.club/", site = "DIC")
 
 def generateSourceFlag(tracker):
 	if tracker == "red":
 		return "RED"
-	elif tracker == "apl":
+	elif tracker == "ops":
 		return "OPS"
 	elif tracker == "nwcd":
 		return "nwcd"
+	elif tracker == "dic":
+		return "DICMusic"
 
 def getReleases(tracker, response, artist_name, group_name):
 	ret = list()
@@ -430,7 +449,11 @@ def moveAlbum(parsedArgs, a, w, source):
 	t_media = tdata["media"]
 	t_format = tdata["format"]
 	t_encoding = tdata["encoding"]
-	t_description = tdata["description"] + "\n\nUploaded with GazelleSync ("+parsedArgs["from"].upper()+" to "+parsedArgs["to"].upper()+"). Many thanks to the original uploader!"
+	if tdata["description"] == "":
+		t_description = "Uploaded with GazelleSync ("+parsedArgs["from"].upper()+" to "+parsedArgs["to"].upper()+"). Many thanks to the original uploader!"
+	else:
+		t_description = "Content of the original Description field at " + parsedArgs["from"].upper() + " (it may be empty) : [quote]" + tdata["description"] + "[/quote]" +  "\n\nUploaded with GazelleSync ("+parsedArgs["from"].upper()+" to "+parsedArgs["to"].upper()+"). Many thanks to the original uploader!"
+
 	t_remasterYear = tdata["remasterYear"]
 	t_remasterCatalogueNumber = tdata["remasterCatalogueNumber"]
 	t_remastered = tdata["remastered"]
@@ -522,6 +545,7 @@ def moveAlbum(parsedArgs, a, w, source):
 	tpath = tpath.replace("/", "_")
 	tpath = tpath.replace("\\", "_")
 	tpath = tpath.replace(":", "_")
+	tpath = unescape(tpath)
 	
 	#tpath = "torrent/"+tpath
 	

@@ -38,7 +38,7 @@ class XanaxAPI:
 		self.tracker = __torrent_url__ + "/"
 		self.last_request = time.time()
 		self.rate_limit = 2.0 # seconds between requests
-		self.site = "OPS"
+		self.site = "APL"
 		self._login()
 
 	def _login(self):

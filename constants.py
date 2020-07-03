@@ -8,4 +8,7 @@ RedPassword = ""
 NWCDUsername = ""
 NWCDPassword = ""
 
+DICUsername = ""
+DICPassword = ""
+
 directory = ""
