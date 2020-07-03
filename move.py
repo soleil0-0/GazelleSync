@@ -14,9 +14,9 @@ from xanaxapi import XanaxAPI
 from dicapi import DicAPI
 from shutil import copyfile
 import bencode
-import constants
 import html
 from html.parser import HTMLParser
+import configparser
 
 #sys.stdout = open('out.txt', 'w')
 
@@ -29,7 +29,7 @@ Import composer info and such.
 This is the changelog:
 Version 1.0:
  - Has the ability to create torrents. No need to find the old .torrent file.
- - Moved login data to constants.py.
+ - Moved login data to config.cfg.
 
 Version 2.1:
  - Torrentpath argument has been deprecated.
@@ -232,30 +232,30 @@ def getTorrentHash(path):
 def generateSourceTrackerAPI(tracker):
 	if tracker == "red":
 		print("Source tracker is RED")
-		return RedApi(username=constants.RedUsername, password=constants.RedPassword)
+		return RedApi(username=config.get('RED', 'Username').split('"')[1], password=config.get('RED', 'Password').split('"')[1])
 	elif tracker == "ops":
 		print("Source tracker is OPS")
-		return XanaxAPI(username=constants.OrpheusUsername, password=constants.OrpheusPassword)
+		return XanaxAPI(username=config.get('OPS', 'Username').split('"')[1], password=config.get('OPS', 'Password').split('"')[1])
 	elif tracker == "nwcd":
 		print("Source tracker is NWCD")
-		return NwAPI(username=constants.NWCDUsername, password=constants.NWCDPassword)
+		return NwAPI(username=config.get('NWCD', 'Username').split('"')[1], password=config.get('NWCD', 'Password').split('"')[1])
 	elif tracker == "dic":
 		print("Source tracker is DIC")
-		return DicAPI(username=constants.DICUsername, password=constants.DICPassword)
+		return DicAPI(username=config.get('DIC', 'Username').split('"')[1], password=config.get('DIC', 'Password').split('"')[1])
 
 def generateDestinationTrackerAPI(tracker):
 	if tracker == "red":
 		print("Destination tracker is RED")
-		return WhatAPI(username=constants.RedUsername, password=constants.RedPassword, tracker = "https://flacsfor.me/{0}/announce", url = "https://redacted.ch/", site = "RED")
+		return WhatAPI(username=config.get('RED', 'Username').split('"')[1], password=config.get('RED', 'Password').split('"')[1], tracker = "https://flacsfor.me/{0}/announce", url = "https://redacted.ch/", site = "RED")
 	elif tracker == "ops":
 		print("Destination tracker is OPS")
-		return WhatAPI(username=constants.OrpheusUsername, password=constants.OrpheusPassword, tracker = "https://home.opsfet.ch/{0}/announce", url = "https://orpheus.network/", site = "OPS")
+		return WhatAPI(username=config.get('OPS', 'Username').split('"')[1], password=config.get('OPS', 'Password').split('"')[1], tracker = "https://home.opsfet.ch/{0}/announce", url = "https://orpheus.network/", site = "OPS")
 	elif tracker == "nwcd":
 		print("Destination tracker is NWCD")
-		return WhatAPI(username=constants.NWCDUsername, password=constants.NWCDPassword, tracker = "https://definitely.notwhat.cd:443/{0}/announce", url = "https://notwhat.cd/", site = "NWCD")
+		return WhatAPI(username=config.get('NWCD', 'Username').split('"')[1], password=config.get('NWCD', 'Password').split('"')[1], tracker = "https://definitely.notwhat.cd:443/{0}/announce", url = "https://notwhat.cd/", site = "NWCD")
 	elif tracker == "dic":
 		print("Destination tracker is DIC")
-		return WhatAPI(username=constants.DICUsername, password=constants.DICPassword, tracker = "http://tracker.dicmusic.club:34000/{0}/announce", url = "https://dicmusic.club/", site = "DIC")
+		return WhatAPI(username=config.get('DIC', 'Username').split('"')[1], password=config.get('DIC', 'Password').split('"')[1], tracker = "https://tracker.dicmusic.club/{0}/announce", url = "https://dicmusic.club/", site = "DIC")
 
 def generateSourceFlag(tracker):
 	if tracker == "red":
@@ -425,7 +425,7 @@ def moveAlbum(parsedArgs, a, w, source):
 	if not os.path.exists("meta"):
 		os.makedirs("meta")
 
-	f = open("meta\\" + str(TorrentIDsource) + ".json","w")
+	f = open(os.path.join("meta", str(TorrentIDsource) + ".json"),"w")
 	f.write(json.dumps(data,indent=4))
 	f.close()
 
@@ -566,13 +566,15 @@ def moveAlbum(parsedArgs, a, w, source):
 	
 	w.upload(folder, tempfolder, album, g_tags, g_wikiImage, artists, "torrent/"+tpath)
 
-	if constants.directory != "":
-		copyfile("torrent/"+tpath, os.path.join(constants.directory, tpath))
-
+	if config.get("common", "directory").split('"')[1] != "":
+		copyfile(os.path.join("torrent", tpath), os.path.join(config.get("common", "directory").split('"')[1], tpath))
 
 __version__ = "1.4"
 __site_url__ = "https://orpheus.network"
 __torrent_url__ = "https://home.opsfet.ch"
+
+config = configparser.ConfigParser()
+config.read(os.path.join(os.path.dirname(__file__), 'config.cfg'))
 
 parsedArgs = parseArguments(sys.argv)
 

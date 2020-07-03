@@ -33,7 +33,7 @@ class DicAPI:
 		self.authkey = None
 		self.passkey = None
 		self.userid = None
-		self.tracker = "http://tracker.dicmusic.club:34000/"
+		self.tracker = "https://tracker.dicmusic.club/"
 		self.last_request = time.time()
 		self.rate_limit_cool_down = 10
 		self.rate_limit_max = 5

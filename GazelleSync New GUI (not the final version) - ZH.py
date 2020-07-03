@@ -1,16 +1,20 @@
  #!/usr/bin/env Python3      
 import PySimpleGUI as sg      
 import os
-sg.ChangeLookAndFeel('DarkBlue')      
 
-   
+def is_exe(fpath):
+    return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
 
-      
+move_cmd = "python move.py"
+if is_exe("move.exe") or is_exe("move"):
+  move_cmd = os.path.join(".", "move")
+
+sg.ChangeLookAndFeel('DarkBlue')
 
 layout = [      
           
     [sg.Text('GazelleSync 5.0.2 - DIC Variant', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],         
-    [sg.Text('(注意：首先，你需要编辑 constants.py，在其中添加所有相关站点的用户名和密码。)', font=("Times", 10))],
+    [sg.Text('(注意：首先，你需要编辑 config.cfg，在其中添加所有相关站点的用户名和密码。)', font=("Times", 10))],
     [sg.Text('(注意：本 .py 文件应与其他 .py 文件处于同一目录下。)', font=("Times", 10))],
     [sg.Text('从：', font=("Times", 15)), sg.InputCombo(('OPS', 'RED', 'NWCD', 'DIC'),key='_from_', default_value='none'), sg.Text('到：', font=("Times", 15)), sg.InputCombo(('OPS', 'RED', 'NWCD', 'DIC'),key='_to_', default_value='none')],
 	[sg.Text('1) 从来源站点获取种子信息：', font=("Times", 20))],
@@ -43,7 +47,7 @@ while True:
     event, values = window.Read()
     callMovePy = ''
     if event == '_goGo_':
-        callMovePy = 'python move.py from=' + values['_from_'] + ' to=' + values['_to_']
+        callMovePy = move_cmd + ' from=' + values['_from_'] + ' to=' + values['_to_']
         if len(values['_permalink_']) > 0 :
             callMovePy += ' link="' + values['_permalink_'] + '"'
         elif len(values['_torrentFile_']) > 0:

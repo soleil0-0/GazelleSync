@@ -1,12 +1,20 @@
  #!/usr/bin/env Python3      
 import PySimpleGUI as sg      
 import os
-sg.ChangeLookAndFeel('DarkBlue')      
+
+def is_exe(fpath):
+    return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+move_cmd = "python move.py"
+if is_exe("move.exe") or is_exe("move"):
+  move_cmd = os.path.join(".", "move")
+
+sg.ChangeLookAndFeel('DarkBlue')
 
 layout = [      
           
     [sg.Text('GazelleSync 5.0.2 - DIC Variant', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],         
-    [sg.Text('(Note: You should edit constants.py first, to include usernames and passwords of all relevant trackers)', font=("Helvetica", 8))],
+    [sg.Text('(Note: You should edit config.cfg first, to include usernames and passwords of all relevant trackers)', font=("Helvetica", 8))],
     [sg.Text('(Note: This .py should be in the same directory as the other .py files)', font=("Helvetica", 8))],
     [sg.Text('From: ', font=("Helvetica", 15)), sg.InputCombo(('OPS', 'RED', 'NWCD', 'DIC'),key='_from_', default_value='none'), sg.Text('To :', font=("Helvetica", 15)), sg.InputCombo(('OPS', 'RED', 'NWCD', 'DIC'),key='_to_', default_value='none')],
 	[sg.Text('1) Fetch the torrent info from source tracker :', font=("Helvetica", 20))],
@@ -39,7 +47,7 @@ while True:
     event, values = window.Read()
     callMovePy = ''
     if event == '_goGo_':
-        callMovePy = 'python move.py from=' + values['_from_'] + ' to=' + values['_to_']
+        callMovePy = move_cmd + ' from=' + values['_from_'] + ' to=' + values['_to_']
         if len(values['_permalink_']) > 0 :
             callMovePy += ' link="' + values['_permalink_'] + '"'
         elif len(values['_torrentFile_']) > 0:
