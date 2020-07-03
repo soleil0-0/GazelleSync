@@ -1,6 +1,6 @@
 
-ApolloUsername = ""
-ApolloPassword = ""
+OrpheusUsername = ""
+OrpheusPassword = ""
 
 RedUsername = ""
 RedPassword = ""

@@ -1,0 +1,1589 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>Upload :: Orpheus</title>
+	<meta http-equiv="X-UA-Compatible" content="chrome=1;IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="msapplication-config" content="none" />
+	<meta name="referrer" content="none, no-referrer, same-origin" />
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Orpheus Torrents" href="opensearch.php?type=torrents" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Orpheus Artists" href="opensearch.php?type=artists" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Orpheus Requests" href="opensearch.php?type=requests" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Orpheus Forums" href="opensearch.php?type=forums" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Orpheus Log" href="opensearch.php?type=log" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Orpheus Users" href="opensearch.php?type=users" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Orpheus Wiki" href="opensearch.php?type=wiki" />
+	<link rel="alternate" type="application/rss+xml"
+			href="feeds.php?feed=feed_news&amp;user=1050&amp;auth=5b2992e94dc40f5f5bd3852a406a9aef&amp;passkey=cb697edef99e86e9cd928451b723f0c2&amp;authkey=c042da33e5e10b593d78474fb57ecbf3"
+			title="Orpheus - News" />
+	<link rel="alternate" type="application/rss+xml"
+			href="feeds.php?feed=feed_blog&amp;user=1050&amp;auth=5b2992e94dc40f5f5bd3852a406a9aef&amp;passkey=cb697edef99e86e9cd928451b723f0c2&amp;authkey=c042da33e5e10b593d78474fb57ecbf3"
+			title="Orpheus - Blog" />
+	<link rel="alternate" type="application/rss+xml"
+			href="feeds.php?feed=feed_changelog&amp;user=1050&amp;auth=5b2992e94dc40f5f5bd3852a406a9aef&amp;passkey=cb697edef99e86e9cd928451b723f0c2&amp;authkey=c042da33e5e10b593d78474fb57ecbf3"
+			title="Orpheus - Gazelle Change Log" />
+	<link rel="alternate" type="application/rss+xml"
+			href="feeds.php?feed=torrents_notify_cb697edef99e86e9cd928451b723f0c2&amp;user=1050&amp;auth=5b2992e94dc40f5f5bd3852a406a9aef&amp;passkey=cb697edef99e86e9cd928451b723f0c2&amp;authkey=c042da33e5e10b593d78474fb57ecbf3"
+			title="Orpheus - P.T.N." />
+	<link rel="alternate" type="application/rss+xml"
+			href="feeds.php?feed=torrents_all&amp;user=1050&amp;auth=5b2992e94dc40f5f5bd3852a406a9aef&amp;passkey=cb697edef99e86e9cd928451b723f0c2&amp;authkey=c042da33e5e10b593d78474fb57ecbf3"
+			title="Orpheus - All Torrents" />
+	<link rel="alternate" type="application/rss+xml"
+			href="feeds.php?feed=torrents_music&amp;user=1050&amp;auth=5b2992e94dc40f5f5bd3852a406a9aef&amp;passkey=cb697edef99e86e9cd928451b723f0c2&amp;authkey=c042da33e5e10b593d78474fb57ecbf3"
+			title="Orpheus - Music Torrents" />
+	<link rel="alternate" type="application/rss+xml"
+			href="feeds.php?feed=torrents_apps&amp;user=1050&amp;auth=5b2992e94dc40f5f5bd3852a406a9aef&amp;passkey=cb697edef99e86e9cd928451b723f0c2&amp;authkey=c042da33e5e10b593d78474fb57ecbf3"
+			title="Orpheus - Application Torrents" />
+	<link rel="alternate" type="application/rss+xml"
+			href="feeds.php?feed=torrents_ebooks&amp;user=1050&amp;auth=5b2992e94dc40f5f5bd3852a406a9aef&amp;passkey=cb697edef99e86e9cd928451b723f0c2&amp;authkey=c042da33e5e10b593d78474fb57ecbf3"
+			title="Orpheus - E-Book Torrents" />
+	<link rel="alternate" type="application/rss+xml"
+			href="feeds.php?feed=torrents_abooks&amp;user=1050&amp;auth=5b2992e94dc40f5f5bd3852a406a9aef&amp;passkey=cb697edef99e86e9cd928451b723f0c2&amp;authkey=c042da33e5e10b593d78474fb57ecbf3"
+			title="Orpheus - Audiobooks Torrents" />
+	<link rel="alternate" type="application/rss+xml"
+			href="feeds.php?feed=torrents_evids&amp;user=1050&amp;auth=5b2992e94dc40f5f5bd3852a406a9aef&amp;passkey=cb697edef99e86e9cd928451b723f0c2&amp;authkey=c042da33e5e10b593d78474fb57ecbf3"
+			title="Orpheus - E-Learning Video Torrents" />
+	<link rel="alternate" type="application/rss+xml"
+			href="feeds.php?feed=torrents_comedy&amp;user=1050&amp;auth=5b2992e94dc40f5f5bd3852a406a9aef&amp;passkey=cb697edef99e86e9cd928451b723f0c2&amp;authkey=c042da33e5e10b593d78474fb57ecbf3"
+			title="Orpheus - Comedy Torrents" />
+	<link rel="alternate" type="application/rss+xml"
+			href="feeds.php?feed=torrents_comics&amp;user=1050&amp;auth=5b2992e94dc40f5f5bd3852a406a9aef&amp;passkey=cb697edef99e86e9cd928451b723f0c2&amp;authkey=c042da33e5e10b593d78474fb57ecbf3"
+			title="Orpheus - Comic Torrents" />
+	<link rel="alternate" type="application/rss+xml"
+			href="feeds.php?feed=torrents_mp3&amp;user=1050&amp;auth=5b2992e94dc40f5f5bd3852a406a9aef&amp;passkey=cb697edef99e86e9cd928451b723f0c2&amp;authkey=c042da33e5e10b593d78474fb57ecbf3"
+			title="Orpheus - MP3 Torrents" />
+	<link rel="alternate" type="application/rss+xml"
+			href="feeds.php?feed=torrents_flac&amp;user=1050&amp;auth=5b2992e94dc40f5f5bd3852a406a9aef&amp;passkey=cb697edef99e86e9cd928451b723f0c2&amp;authkey=c042da33e5e10b593d78474fb57ecbf3"
+			title="Orpheus - FLAC Torrents" />
+	<link rel="alternate" type="application/rss+xml"
+			href="feeds.php?feed=torrents_vinyl&amp;user=1050&amp;auth=5b2992e94dc40f5f5bd3852a406a9aef&amp;passkey=cb697edef99e86e9cd928451b723f0c2&amp;authkey=c042da33e5e10b593d78474fb57ecbf3"
+			title="Orpheus - Vinyl Sourced Torrents" />
+	<link rel="alternate" type="application/rss+xml"
+			href="feeds.php?feed=torrents_lossless&amp;user=1050&amp;auth=5b2992e94dc40f5f5bd3852a406a9aef&amp;passkey=cb697edef99e86e9cd928451b723f0c2&amp;authkey=c042da33e5e10b593d78474fb57ecbf3"
+			title="Orpheus - Lossless Torrents" />
+	<link rel="alternate" type="application/rss+xml"
+			href="feeds.php?feed=torrents_lossless24&amp;user=1050&amp;auth=5b2992e94dc40f5f5bd3852a406a9aef&amp;passkey=cb697edef99e86e9cd928451b723f0c2&amp;authkey=c042da33e5e10b593d78474fb57ecbf3"
+			title="Orpheus - 24bit Lossless Torrents" />
+	<link rel="stylesheet" type="text/css"
+			href="static/styles/global.css?v=1541806506" />
+	<link rel="stylesheet" href="static/styles/tooltipster/style.css?v=1538226512" type="text/css" media="screen" />
+	<meta name="viewport" content="width=device-width" />
+	<link rel="stylesheet" type="text/css" title="apollostage" media="screen"
+			href="static/styles/apollostage/style.css?v=1541806506" />
+	<script type="text/javascript">
+		//<![CDATA[
+		var authkey = "c042da33e5e10b593d78474fb57ecbf3";
+		var userid = 1050;
+		//]]>
+	</script>
+	<script
+			src="static/functions/jquery.js?v=1538226512"
+			type="text/javascript"></script>
+	<script
+			src="static/functions/script_start.js?v=1538226512"
+			type="text/javascript"></script>
+	<script
+			src="static/functions/ajax.class.js?v=1538226512"
+			type="text/javascript"></script>
+	<script
+			src="static/functions/global.js?v=1538226512"
+			type="text/javascript"></script>
+	<script
+			src="static/functions/jquery.autocomplete.js?v=1538226512"
+			type="text/javascript"></script>
+	<script
+			src="static/functions/autocomplete.js?v=1538226512"
+			type="text/javascript"></script>
+	<script
+			src="static/functions/jquery.countdown.min.js?v=1538226512"
+			type="text/javascript"></script>
+	<script
+			src="static/functions/upload.js?v=1538580329"
+			type="text/javascript"></script>
+	<script
+			src="static/functions/validate_upload.js?v=1538226512"
+			type="text/javascript"></script>
+	<script
+			src="static/functions/valid_tags.js?v=1538226512"
+			type="text/javascript"></script>
+	<script
+			src="static/functions/musicbrainz.js?v=1538226512"
+			type="text/javascript"></script>
+	<script
+			src="static/functions/multiformat_uploader.js?v=1538226512"
+			type="text/javascript"></script>
+	<script
+			src="static/functions/tooltipster.js?v=1538226512"
+			type="text/javascript"></script>
+	<script
+			src="static/functions/tooltipster_settings.js?v=1538226512"
+			type="text/javascript"></script>
+</head>
+<body id="upload">
+	<input id="extracb1" class="hidden" type="checkbox">
+	<input id="extracb2" class="hidden" type="checkbox">
+	<input id="extracb3" class="hidden" type="checkbox">
+	<input id="extracb4" class="hidden" type="checkbox">
+	<input id="extracb5" class="hidden" type="checkbox">
+	<div id="wrapper">
+		<h1 class="hidden">Orpheus</h1>
+		<div id="header">
+			<div id="logo">
+				<a href="index.php"></a>
+			</div>
+			<div id="userinfo">
+				<ul id="userinfo_username">
+					<li id="nav_userinfo" >
+						<a href="user.php?id=1050" class="username">Quawafwaf</a>
+					</li>
+					<li id="nav_userclass">
+						<span class="hidden userclass">VIP</span>
+					</li>
+					<li id="nav_useredit" class="brackets">
+						<a href="user.php?action=edit&amp;userid=1050">Edit</a>
+					</li>
+					<li id="nav_logout" class="brackets">
+						<a href="logout.php?auth=c042da33e5e10b593d78474fb57ecbf3">Logout</a>
+					</li>
+				</ul>
+				<ul id="userinfo_major">
+					<li id="nav_upload" class="brackets active">
+						<a href="upload.php" title="Upload">Upload</a>
+					</li>
+					<li id="nav_bonus" class="brackets">
+						<a href="bonus.php" class='tooltip' title="Bonus (253,119)">Bonus (253,119)</a>
+					</li>
+					<li id="nav_invite" class="brackets">
+						<a href="user.php?action=invite" class='tooltip' title="Invite (∞)">Invite (∞)</a>
+					</li>
+					<li id="nav_donate" class="brackets">
+						<a href="donate.php" class='tooltip' title="Donate">Donate</a>
+					</li>
+
+				</ul>
+				<ul id="userinfo_stats">
+					<li id="stats_seeding">
+						<a href="torrents.php?type=seeding&amp;userid=1050">Up</a>:
+						<span class="stat tooltip" title="11.43537 GB">11.44 GB</span>
+					</li>
+					<li id="stats_leeching">
+						<a href="torrents.php?type=leeching&amp;userid=1050">Down</a>:
+						<span class="stat tooltip" title="1.11550 GB">1.12 GB</span>
+					</li>
+					<li id="stats_ratio">
+						Ratio: <span class="stat"><span class="tooltip r50" title="10.25134">10.25</span></span>
+					</li>
+					<li id="stats_required">
+						<a href="rules.php?p=ratio">Required</a>:
+						<span class="stat tooltip" title="0.00000">0.00</span>
+					</li>
+				</ul>
+				<ul id="userinfo_minor">
+					<li id="nav_inbox">
+						<a href="inbox.php">Inbox</a>
+					</li>
+					<li id="nav_staffinbox">
+						<a href="staffpm.php">Staff Inbox</a>
+					</li>
+					<li id="nav_uploaded">
+						<a href="torrents.php?type=uploaded&amp;userid=1050">Uploads</a>
+					</li>
+					<li id="nav_bookmarks">
+						<a href="bookmarks.php?type=torrents">Bookmarks</a>
+					</li>
+					<li id="nav_notifications">
+						<a href="user.php?action=notify">Notifications</a>
+					</li>
+					<li id="nav_subscriptions">
+						<a href="userhistory.php?action=subscriptions">Subscriptions</a>
+					</li>
+					<li id="nav_comments">
+						<a href="comments.php">Comments</a></li>
+					<li id="nav_friends">
+						<a href="friends.php">Friends</a></li>
+					<li id="nav_better">
+						<a href="better.php">Better</a></li>
+					<li id="nav_random">
+						<a href="random.php">Random Album</a></li>
+					<li id="nav_logchecker" style="display: none">
+						<a href="logchecker.php">Log Checker</a></li>
+				</ul>
+			</div>
+			<div id="menu">
+				<h4 class="hidden">Site Menu</h4>
+				<ul>
+					<li id="nav_index">
+						<a href="index.php">Home</a>
+					</li>
+					<li id="nav_torrents">
+						<a href="torrents.php">Torrents</a>
+					</li>
+					<li id="nav_collages">
+						<a href="collages.php">Collages</a>
+					</li>
+					<li id="nav_requests">
+						<a href="requests.php">Requests</a>
+					</li>
+					<li id="nav_forums">
+						<a href="forums.php">Forums</a>
+					</li>
+					<li id="nav_irc">
+						<a href="wiki.php?action=article&name=irc">IRC</a>
+					</li>
+					<li id="nav_top10">
+						<a href="top10.php">Top 10</a>
+					</li>
+					<li id="nav_rules">
+						<a href="rules.php">Rules</a>
+					</li>
+					<li id="nav_wiki">
+						<a href="wiki.php">Wiki</a>
+					</li>
+					<li id="nav_staff">
+						<a href="staff.php" title="Staff">Staff</a>
+					</li>
+				</ul>
+			</div>
+			<div id="searchbars">
+				<ul>
+					<li id="searchbar_torrents">
+						<span class="hidden">Torrents: </span>
+						<form class="search_form" name="torrents" action="torrents.php" method="get">
+							<input id="torrentssearch" accesskey="t" spellcheck="false"
+									onfocus="if (this.value == 'Torrents') { this.value = ''; }"
+									onblur="if (this.value == '') { this.value = 'Torrents'; }"
+									value="Torrents" placeholder="Torrents" type="text" name="searchstr" size="17" />
+						</form>
+					</li>
+					<li id="searchbar_artists">
+						<span class="hidden">Artist: </span>
+						<form class="search_form" name="artists" action="artist.php" method="get">
+							<input id="artistsearch" data-gazelle-autocomplete="true" accesskey="a"
+									spellcheck="false" autocomplete="off"
+									onfocus="if (this.value == 'Artists') { this.value = ''; }"
+									onblur="if (this.value == '') { this.value = 'Artists'; }"
+									value="Artists" placeholder="Artists" type="text" name="artistname" size="17" />
+						</form>
+					</li>
+					<li id="searchbar_requests">
+						<span class="hidden">Requests: </span>
+						<form class="search_form" name="requests" action="requests.php" method="get">
+							<input id="requestssearch" spellcheck="false"
+								    accesskey="r"
+									onfocus="if (this.value == 'Requests') { this.value = ''; }"
+									onblur="if (this.value == '') { this.value = 'Requests'; }"
+									value="Requests" placeholder="Requests" type="text" name="search" size="17" />
+						</form>
+					</li>
+					<li id="searchbar_forums">
+						<span class="hidden">Forums: </span>
+						<form class="search_form" name="forums" action="forums.php" method="get">
+							<input value="search" type="hidden" name="action" />
+							<input id="forumssearch"
+								    accesskey="f"
+									onfocus="if (this.value == 'Forums') { this.value = ''; }"
+									onblur="if (this.value == '') { this.value = 'Forums'; }"
+									value="Forums" placeholder="Forums" type="text" name="search" size="17" />
+						</form>
+					</li>
+<!--
+					<li id="searchbar_wiki">
+						<span class="hidden">Wiki: </span>
+						<form class="search_form" name="wiki" action="wiki.php" method="get">
+							<input type="hidden" name="action" value="search" />
+							<input
+									onfocus="if (this.value == 'Wiki') { this.value = ''; }"
+									onblur="if (this.value == '') { this.value = 'Wiki'; }"
+									value="Wiki" placeholder="Wiki" type="text" name="search" size="17" />
+						</form>
+					</li>
+-->
+					<li id="searchbar_log">
+						<span class="hidden">Log: </span>
+						<form class="search_form" name="log" action="log.php" method="get">
+							<input id="logsearch"
+								    accesskey="l"
+									onfocus="if (this.value == 'Log') { this.value = ''; }"
+									onblur="if (this.value == '') { this.value = 'Log'; }"
+									value="Log" placeholder="Log" type="text" name="search" size="17" />
+						</form>
+					</li>
+					<li id="searchbar_users">
+						<span class="hidden">Users: </span>
+						<form class="search_form" name="users" action="user.php" method="get">
+							<input type="hidden" name="action" value="search" />
+							<input
+									id="userssearch" accesskey="u"
+									onfocus="if (this.value == 'Users') { this.value = ''; }"
+									onblur="if (this.value == '') { this.value = 'Users'; }"
+									value="Users" placeholder="Users" type="text" name="search" size="20" />
+						</form>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div id="content">
+<div class="box pad" style="margin: 0px auto; width: 700px;">
+	<h3 id="dnu_header">Do Not Upload List</h3>
+	<p>Last updated: <span class="time tooltip" title="Nov 04 2018, 12:46">6 days, 7 hours ago</span></p>
+	<p>The following releases are currently forbidden from being uploaded to the site. Do not upload them unless your torrent meets a condition specified in the comment.
+	<span id="showdnu"><a href="#" onclick="$('#dnulist').gtoggle(); this.innerHTML = (this.innerHTML == 'Hide' ? 'Show' : 'Hide'); return false;" class="brackets">Show</a></span>
+	</p>
+	<table id="dnulist" class="hidden">
+		<tr class="colhead">
+			<td width="50%"><strong>Name</strong></td>
+			<td><strong>Comment</strong></td>
+		</tr>
+		<tr>
+			<td>
+				Specifically Banned Upload Types
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>Anything prohibited on the Specifically Banned list at <a href="rules.php?p=upload#h1.2">1.2</a>.</td>
+		</tr>
+		<tr>
+			<td>
+				Zero Effort, Spam Releases
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>Creators that prolifically release zero effort content of no value (e.g Paul_DVR, Vap0rwave, Firmensprecher, Phyllomedusa, stretches), often solely for the purpose of spam or upload gain. This includes releases by Drizzy Wap.</td>
+		</tr>
+		<tr>
+			<td>
+				MQA Releases
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>MQA (Master Quality Authenticated) audio files may not be uploaded as the MQA encoding process is lossy. This includes all 24-bit files from TIDAL and files sourced from MQA.</td>
+		</tr>
+		<tr>
+			<td>
+				Microsoft COFEE (Computer Online Forensic Evidence Extractor)
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>Microsoft&#39;s Computer Online Forensic Evidence Extractor.</td>
+		</tr>
+		<tr>
+			<td>
+				Ableton.Live.Suite.v10.0.1.Incl.Patched.and.Keygen-R2R
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>Keygen contains a crypto miner.</td>
+		</tr>
+		<tr>
+			<td>
+				TSX Scene Releases
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>Scene group that transcodes and releases from lossy sources.</td>
+		</tr>
+		<tr>
+			<td>
+				BELLUM Scene Releases
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>BELLUM is a scene group which previously ripped CDs and upconverted them to 24-bit lossless. They appear to have ceased this behavior, but tread with caution as many of their old rips are bad transcodes and there&#39;s no guarantees about their newer rips.</td>
+		</tr>
+		<tr>
+			<td>
+				&quot;Unmasters&quot; Editions
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>These are fan remasters which do not sufficiently meet the criteria for &quot;reasonably official&quot;. Not the same as &quot;unmastered&quot; or rough cuts.</td>
+		</tr>
+		<tr>
+			<td>
+				Godspeed You! Black Emperor - All Lights Fucked on the Hairy Amp Drooling (1994 Cassette Tape)
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>Contact a moderator before attempting to upload. Early demo tape limited to 33 copies, all of which are assumed to be accounted for by the band. Unless something significant changes, any copy you find of this online is certainly fake.</td>
+		</tr>
+		<tr>
+			<td>
+				Wu-Tang Clan - Once Upon a Time in Shaolin
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>Only one copy of this exists (masters were intentionally destroyed), and unless something significant changes, every single copy you find of this online is certainly fake.</td>
+		</tr>
+		<tr>
+			<td>
+				Early Boards of Canada Releases
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>These are only in the hands of friends/family of the band and have a history of fakes. Contact staff before uploading: Catalog 3, Acid Memories, Closes Vol. 1, Play by Numbers, Hooper Bay, Boc Maxima, &quot;Old Tunes&quot; releases, or other collections.</td>
+		</tr>
+		<tr>
+			<td>
+				Jean-Michel Jarre - Music for Supermarkets
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>1980&#39;s electronic release which is limited to one copy, with deliberate destruction of the masters. Every rip you will find is a bootleg copy which was broadcast over the radio. Please contact a moderator before uploading.</td>
+		</tr>
+		<tr>
+			<td>
+				The Upholsterers - Your Furniture Was Always Dead&hellip; I Was Just Afraid To Tell You
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>Early project of Jack White from before he was famous in which he hid records inside of furniture. There are many fakes of this floating around. Please contact a moderator before uploading.</td>
+		</tr>
+		<tr>
+			<td>
+				Bruce Springsteen - Odds and Sods
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>Internet sourced, non-retail bootleg.</td>
+		</tr>
+		<tr>
+			<td>
+				Dr. Dre - Detox
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>Cancelled studio album, with numerous amounts of fake leaks online. Please contact a moderator before uploading.</td>
+		</tr>
+		<tr>
+			<td>
+				The Beatles - Carnival of Light
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>Unreleased song from The Beatles. Paul McCartney owns the master tapes to this and due to complications it has never been released. There are numerous fakes of this floating around the internet.</td>
+		</tr>
+		<tr>
+			<td>
+				Green Day - Cigarettes and Valentines
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>Unreleased studio album. The master recordings were stolen close to the conclusion of production and never recovered. There are numerous fakes of this album floating around the internet. Please contact a moderator prior to uploading.</td>
+		</tr>
+		<tr>
+			<td>
+				Pink Floyd - Tree Full of Secrets
+				<strong class="important_text">(New!)</strong>
+			</td>
+			<td>Internet sourced, non-retail bootleg.</td>
+		</tr>
+	</table>
+</div><br />
+<div class="thin">
+	<p style="text-align: center;">
+		Your personal announce URL is:<br />
+		<input type="text" value="https://home.opsfet.ch/cb697edef99e86e9cd928451b723f0c2/announce" size="71" onclick="this.select();" readonly="readonly" />
+	</p>
+	<p style="color: red; text-align: center;"><a href="torrents.php?torrentid=920515">The exact same torrent file already exists on the site!</a></p>
+	<form class="create_form" name="torrent" action="" enctype="multipart/form-data" method="post" id="upload_table" onsubmit="$('#post').raw().disabled = 'disabled';">
+		<div>
+			<input type="hidden" name="submit" value="true" />
+			<input type="hidden" name="auth" value="c042da33e5e10b593d78474fb57ecbf3" />
+		</div>
+		<table cellpadding="3" cellspacing="1" border="0" class="layout border" width="100%">
+			<tr>
+				<td class="label">Torrent file:</td>
+				<td>
+					<input id="file" type="file" name="file_input" size="50" accept="application/x-bittorrent,.torrent" />
+				</td>
+			</tr>
+			<tr>
+				<td class="label">JSON file:</td>
+				<td>
+					<input type="file" onchange="ParseUploadJson()" id="torrent-json-file" accept="application/json,.json" />
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Type:</td>
+				<td>
+					<select id="categories" name="type" onchange="Categories()">
+						<option value="0" selected="selected">Music</option>
+						<option value="1">Applications</option>
+						<option value="2">E-Books</option>
+						<option value="3">Audiobooks</option>
+						<option value="4">E-Learning Videos</option>
+						<option value="5">Comedy</option>
+						<option value="6">Comics</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+		<div id="dynamic_form">
+		<table cellpadding="3" cellspacing="1" border="0" class="layout border slice" width="100%">
+			<tr id="artist_tr">
+			<td class="label">Artist(s):</td>
+			<td id="artistfields">
+				<p id="vawarning" class="hidden">Please use the multiple artists feature rather than adding "Various Artists" as an artist; read <a href="wiki.php?action=article&amp;id=64" target="_blank">this</a> for more information.</p>
+					<input type="text" id="artist" name="artists[]" size="45" value="Les Fr&egrave;res Jacques" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1" selected="selected">Main</option>
+						<option value="2">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<a href="javascript:AddArtistField()" class="brackets">+</a> <a href="javascript:RemoveArtistField()" class="brackets">&minus;</a>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Andr&eacute; Huot" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Arthur Rimbaud" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Bernard Dimey" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Blaise Petiveau" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Camille Fran&ccedil;ois" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Claude Bonheur" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Francis Blanche" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Francis Mainville" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Gilbert Br&eacute;hant" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Henri Gougaud" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Jacques Mareuil" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Jacques Pr&eacute;vert" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Jean Blanvillain" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Jean Cosmos" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Jean Tardieu" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Jean-Paul Sartre" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Jean-Pierre Delage" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Jean-Roger Caussimon" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Marc Cab" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Marc Fontenoy" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Maurice Genevoix" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Michel Vaucaire" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Nino" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Raymond Queneau" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Robert Nahmias" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2" selected="selected">Guest</option>
+						<option value="4">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Alec Siniavine" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Bernard Lelou" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Charles Trenet" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Christiane Verger" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Franz Schubert" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Gaby Verlor" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Georges Brassens" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Georges Krier" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Georges Liferman" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Gilles" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Guy Lafarge" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Hubert Degex" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Jack Di&eacute;val" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Jacques Debronckart" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Jacques Provins" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Jean Constantin" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Jos&eacute; Cana" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Joseph Kosma" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="L&eacute;o Ferr&eacute;" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Manuel Rosenthal" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Maurice Thiriet" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Max Rongier" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Michel Emer" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Paul Misraki" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Pierre Philippe" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Ricet Barrier" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Robert Marcy" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Roger Bourdin" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Rudi Revil" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+					<input type="text" id="artist" name="artists[]" size="45" value="Serge Gainsbourg" onblur="CheckVA();" data-gazelle-autocomplete="true" />
+					<select id="importance" name="importance[]">
+						<option value="1">Main</option>
+						<option value="2">Guest</option>
+						<option value="4" selected="selected">Composer</option>
+						<option value="5">Conductor</option>
+						<option value="6">DJ / Compiler</option>
+						<option value="3">Remixer</option>
+						<option value="7">Producer</option>
+					</select>
+					<br />
+				</td>
+			</tr>
+			<tr id="title_tr">
+				<td class="label">Album title:</td>
+				<td>
+					<input type="text" id="title" name="title" size="60" value="Les Fr&egrave;res Jacques chantent Les Po&egrave;tes" />
+					<p class="min_padding">Do not include the words remaster, re-issue, MFSL Gold, limited edition, bonus tracks, bonus disc or country-specific information in this field. That belongs in the edition information fields below; see <a href="wiki.php?action=article&amp;id=18" target="_blank">this</a> for further information. Also remember to use the correct capitalization for your upload. See the <a href="wiki.php?action=article&id=42" target="_blank">Capitalization Guidelines</a> for more information.</p>
+				</td>
+			</tr>
+			<tr id="musicbrainz_tr">
+				<td class="label tooltip" title="Click the &quot;Find Info&quot; button to automatically fill out parts of the upload form by selecting an entry in MusicBrainz">MusicBrainz:</td>
+				<td><input type="button" value="Find Info" id="musicbrainz_button" /></td>
+			</tr>
+			<div id="musicbrainz_popup">
+				<a href="#null" id="popup_close">x</a>
+				<h1 id="popup_title"></h1>
+				<h2 id="popup_back"></h2>
+				<div id="results1"></div>
+				<div id="results2"></div>
+			</div>
+			<div id="popup_background"></div>
+
+<script type="text/javascript">
+//<![CDATA[
+hide();
+if (document.getElementById("categories").disabled == false) {
+	if (navigator.appName == 'Opera') {
+		var useragent = navigator.userAgent;
+		var match = useragent.split('Version/');
+		var version = parseFloat(match[1]);
+		if (version >= 12.00) {
+			show();
+		}
+	} else if (navigator.appName != 'Microsoft Internet Explorer') {
+		show();
+	}
+}
+
+function hide() {
+	document.getElementById("musicbrainz_tr").style.display = "none";
+	document.getElementById("musicbrainz_popup").style.display = "none";
+	document.getElementById("popup_background").style.display = "none";
+}
+
+function show() {
+	document.getElementById("musicbrainz_tr").style.display = "";
+	document.getElementById("musicbrainz_popup").style.display = "";
+	document.getElementById("popup_background").style.display = "";
+}
+//]]>
+</script>
+
+			<tr id="year_tr">
+				<td class="label">
+					<span id="year_label_not_remaster" class="hidden">Year:</span>
+					<span id="year_label_remaster">Year of original release:</span>
+				</td>
+				<td>
+					<p id="yearwarning" class="hidden">You have entered a year for a release which predates the medium's availability. You will need to change the year and enter additional edition information. If this information cannot be provided, check the &quot;Unknown Release&quot; check box below.</p>
+					<input type="text" id="year" name="year" size="5" value="1996" onblur="CheckYear();" /> This is the year of the original release.
+				</td>
+			</tr>
+			<tr id="label_tr">
+				<td class="label">Record label (optional):</td>
+				<td><input type="text" id="record_label" name="record_label" size="40" value="" /></td>
+			</tr>
+			<tr id="catalogue_tr">
+				<td class="label">Catalogue number (optional):</td>
+				<td>
+					<input type="text" id="catalogue_number" name="catalogue_number" size="40" value="" />
+					<br />
+					Please double-check the record label and catalogue number when using MusicBrainz. See <a href="wiki.php?action=article&amp;id=18" target="_blank">this guide</a> for more details.
+				</td>
+			</tr>
+			<tr id="releasetype_tr">
+				<td class="label">
+					<span id="releasetype_label">Release type:</span>
+				</td>
+				<td>
+					<select id="releasetype" name="releasetype">
+						<option>---</option>
+						<option value="1">Album</option>
+						<option value="3">Soundtrack</option>
+						<option value="5">EP</option>
+						<option value="6" selected="selected">Anthology</option>
+						<option value="7">Compilation</option>
+						<option value="9">Single</option>
+						<option value="11">Live album</option>
+						<option value="13">Remix</option>
+						<option value="14">Bootleg</option>
+						<option value="15">Interview</option>
+						<option value="16">Mixtape</option>
+						<option value="17">DJ Mix</option>
+						<option value="18">Concert recording</option>
+						<option value="21">Unknown</option>
+					</select> Please take the time to fill this out properly. Need help? Try reading <a href="wiki.php?action=article&amp;id=58" target="_blank">this wiki article</a> or searching <a href="https://musicbrainz.org/search" target="_blank">MusicBrainz</a>.
+				</td>
+			</tr>
+            <tr><td colspan="2"><h3>Edit Les Fr&egrave;res Jacques chantent Les Po&egrave;tes</h3></td></tr>
+			<tr>
+				<td class="label">Edition information:</td>
+				<td>
+					<input type="checkbox" id="remaster" name="remaster" checked="checked" onclick="Remaster(); CheckYear();" />
+					<label for="remaster">Check this box if this torrent is a different release to the original, for example a limited or country specific edition or a release that includes additional bonus tracks or is a bonus disc.</label>
+					<div id="remaster_true">
+						<br />
+						<input type="checkbox" id="unknown" name="unknown" onclick="CheckYear(); ToggleUnknown();" /> <label for="unknown">Unknown Release</label>
+						<br /><br />
+						<table id="edition_information" class="layout border" border="0" width="100%">
+							<tbody>
+								<tr id="edition_year">
+									<td class="label">Year (required):</td>
+									<td>
+										<input type="text" id="remaster_year" name="remaster_year" size="5" value="1996" />
+									</td>
+								</tr>
+								<tr id="edition_title">
+									<td class="label">Title:</td>
+									<td>
+										<input type="text" id="remaster_title" name="remaster_title" size="50" value="" />
+										<p class="min_padding">Title of the release (e.g. <span style="font-style: italic;">"Deluxe Edition" or "Remastered"</span>).</p>
+									</td>
+								</tr>
+								<tr id="edition_record_label">
+									<td class="label">Record label:</td>
+									<td>
+										<input type="text" id="remaster_record_label" name="remaster_record_label" size="50" value="Rym Musique" />
+										<p class="min_padding">This is for the record label of the <strong>release</strong>. It may differ from the original.</p>
+									</td>
+								</tr>
+								<tr id="edition_catalogue_number">
+									<td class="label">Catalogue number:</td>
+									<td><input type="text" id="remaster_catalogue_number" name="remaster_catalogue_number" size="50" value="1916162" />
+										<p class="min_padding">This is for the catalogue number of the <strong>release</strong>.</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Scene:</td>
+				<td>
+					<input type="checkbox" id="scene" name="scene" />
+					<label for="scene">Select this only if this is a "scene release".<br />If you ripped it yourself, it is <strong>not</strong> a scene release. If you are not sure, <strong class="important_text">do not</strong> select it; you will be penalized. For information on the scene, visit <a href="https://en.wikipedia.org/wiki/Warez_scene" target="_blank">Wikipedia</a>.</label>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Format:</td>
+				<td>
+					<select id="format" name="format" onchange="Format()">
+						<option>---</option>
+						<option value="MP3">MP3</option>
+						<option value="FLAC" selected="selected">FLAC</option>
+						<option value="AAC">AAC</option>
+						<option value="AC3">AC3</option>
+						<option value="DTS">DTS</option>
+					</select>
+				<span id="format_warning" class="important_text"></span>
+				</td>
+			</tr>
+			<tr id="bitrate_row">
+				<td class="label">Bitrate:</td>
+				<td>
+					<select id="bitrate" name="bitrate" onchange="Bitrate()">
+						<option value="">---</option>
+						<option value="192">192</option>
+						<option value="APS (VBR)">APS (VBR)</option>
+						<option value="V2 (VBR)">V2 (VBR)</option>
+						<option value="V1 (VBR)">V1 (VBR)</option>
+						<option value="256">256</option>
+						<option value="APX (VBR)">APX (VBR)</option>
+						<option value="V0 (VBR)">V0 (VBR)</option>
+						<option value="q8.x (VBR)">q8.x (VBR)</option>
+						<option value="320">320</option>
+						<option value="Lossless" selected="selected">Lossless</option>
+						<option value="24bit Lossless">24bit Lossless</option>
+						<option value="Other">Other</option>
+					</select>
+					<span id="other_bitrate_span" class="hidden">
+						<input type="text" name="other_bitrate" size="5" id="other_bitrate" onchange="AltBitrate();" />
+						<input type="checkbox" id="vbr" name="vbr" /><label for="vbr"> (VBR)</label>
+					</span>
+				</td>
+			</tr>
+			<tr id="upload_logs" class="hidden">
+				<td class="label">
+					Log files:
+				</td>
+				<td id="logfields">
+					Check your log files before uploading <a href="logchecker.php" target="_blank">here</a>. For multi-disc releases, click the "<span class="brackets">+</span>" button to add multiple log files.<br />
+					<input id="file" type="file" accept=".txt,.TXT,.log,.LOG" multiple name="logfiles[]" size="50" /> <a href="javascript:;" onclick="AddLogField('.txt,.TXT,.log,.LOG');" class="brackets">+</a> <a href="javascript:;" onclick="RemoveLogField();" class="brackets">&minus;</a>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Multi-format uploader:</td>
+				<td><input type="button" value="+" id="add_format" /><input type="button" style="display: none;" value="-" id="remove_format" /></td>
+			</tr>
+			<tr id="placeholder_row_top"></tr>
+			<tr id="placeholder_row_bottom"></tr>
+			<tr>
+				<td class="label">Media:</td>
+				<td>
+					<select name="media" onchange="CheckYear();" id="media">
+						<option>---</option>
+						<option value="CD" selected="selected">CD</option>
+						<option value="DVD">DVD</option>
+						<option value="Vinyl">Vinyl</option>
+						<option value="BD">BD</option>
+						<option value="Soundboard">Soundboard</option>
+						<option value="SACD">SACD</option>
+						<option value="DAT">DAT</option>
+						<option value="Cassette">Cassette</option>
+						<option value="WEB">WEB</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Tags:</td>
+				<td>
+					<select id="genre_tags" name="genre_tags" onchange="add_tag(); return false;">
+						<option>---</option>
+						<option value="1930s">1930s</option>
+						<option value="1940s">1940s</option>
+						<option value="1950s">1950s</option>
+						<option value="1960s">1960s</option>
+						<option value="1970s">1970s</option>
+						<option value="1980s">1980s</option>
+						<option value="1990s">1990s</option>
+						<option value="2000s">2000s</option>
+						<option value="2010s">2010s</option>
+						<option value="acapella">acapella</option>
+						<option value="acoustic">acoustic</option>
+						<option value="alternative">alternative</option>
+						<option value="ambient">ambient</option>
+						<option value="avant.garde">avant.garde</option>
+						<option value="blues">blues</option>
+						<option value="breaks">breaks</option>
+						<option value="chiptune">chiptune</option>
+						<option value="classical">classical</option>
+						<option value="country">country</option>
+						<option value="dance">dance</option>
+						<option value="dance.hall">dance.hall</option>
+						<option value="disco">disco</option>
+						<option value="drum.and.bass">drum.and.bass</option>
+						<option value="electro">electro</option>
+						<option value="electronic">electronic</option>
+						<option value="emo">emo</option>
+						<option value="experimental">experimental</option>
+						<option value="folk">folk</option>
+						<option value="funk">funk</option>
+						<option value="gospel">gospel</option>
+						<option value="grunge">grunge</option>
+						<option value="hard.rock">hard.rock</option>
+						<option value="hardcore">hardcore</option>
+						<option value="hardcore.dance">hardcore.dance</option>
+						<option value="hardcore.punk">hardcore.punk</option>
+						<option value="hip.hop">hip.hop</option>
+						<option value="house">house</option>
+						<option value="idm">idm</option>
+						<option value="indie">indie</option>
+						<option value="industrial">industrial</option>
+						<option value="instrumental">instrumental</option>
+						<option value="jazz">jazz</option>
+						<option value="jpop">jpop</option>
+						<option value="kpop">kpop</option>
+						<option value="lo.fi">lo.fi</option>
+						<option value="mashup">mashup</option>
+						<option value="metal">metal</option>
+						<option value="noise">noise</option>
+						<option value="opera">opera</option>
+						<option value="pop">pop</option>
+						<option value="progressive.house">progressive.house</option>
+						<option value="progressive.rock">progressive.rock</option>
+						<option value="psy.trance">psy.trance</option>
+						<option value="psychedelic">psychedelic</option>
+						<option value="punk">punk</option>
+						<option value="r.and.b">r.and.b</option>
+						<option value="rave">rave</option>
+						<option value="reggae">reggae</option>
+						<option value="rock">rock</option>
+						<option value="rock.and.roll">rock.and.roll</option>
+						<option value="shoegaze">shoegaze</option>
+						<option value="ska">ska</option>
+						<option value="soul">soul</option>
+						<option value="soundtrack">soundtrack</option>
+						<option value="swing">swing</option>
+						<option value="techno">techno</option>
+						<option value="trance">trance</option>
+						<option value="trip.hop">trip.hop</option>
+						<option value="uk.garage">uk.garage</option>
+						<option value="vanity.house">vanity.house</option>
+						<option value="video.game">video.game</option>
+						<option value="world.music">world.music</option>
+					</select>
+					<input type="text" id="tags" name="tags" size="40" value="chanson" data-gazelle-autocomplete="true" />
+					<br />
+		<ul>
+			<li>Tags should be comma-separated, and you should use a period (".") to separate words inside a tag&#8202;&mdash;&#8202;e.g. "<strong class="important_text_alt">hip.hop</strong>".</li>
+
+			<li>There is a list of official tags to the left of the text box. Please use these tags instead of "unofficial" tags (e.g. use the official "<strong class="important_text_alt">drum.and.bass</strong>" tag, instead of an unofficial "<strong class="important_text">dnb</strong>" tag). <strong>Please note that the "<strong class="important_text_alt">2000s</strong>" tag refers to music produced between 2000 and 2009.</strong></li>
+
+			<li>Avoid abbreviations if at all possible. So instead of tagging an album as "<strong class="important_text">alt</strong>", tag it as "<strong class="important_text_alt">alternative</strong>". Make sure that you use correct spelling.</li>
+
+			<li>Avoid using multiple synonymous tags. Using both "<strong class="important_text">prog.rock</strong>" and "<strong class="important_text_alt">progressive.rock</strong>" is redundant and annoying&#8202;&mdash;&#8202;just use the official "<strong class="important_text_alt">progressive.rock</strong>" tag.</li>
+
+			<li>Do not add "useless" tags, such as "<strong class="important_text">seen.live</strong>", "<strong class="important_text">awesome</strong>", "<strong class="important_text">rap</strong>" (is encompassed by "<strong class="important_text_alt">hip.hop</strong>"), etc. If an album is live, you can tag it as "<strong class="important_text_alt">live</strong>".</li>
+
+			<li>Only tag information on the album itself&#8202;&mdash;&#8202;<strong>not the individual release</strong>. Tags such as "<strong class="important_text">v0</strong>", "<strong class="important_text">eac</strong>", "<strong class="important_text">vinyl</strong>", "<strong class="important_text">from.what</strong>", etc. are strictly forbidden. Remember that these tags will be used for other versions of the same album.</li>
+
+			<li><strong>You should be able to build up a list of tags using only the official tags to the left of the text box. If you are in any doubt about whether or not a tag is acceptable, do not add it.</strong></li>
+		</ul>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Image (optional):</td>
+				<td><input type="text" id="image" name="image" size="60" value="https://ptpimg.me/31n88h.jpg" /></td>
+			</tr>
+			<tr>
+				<td class="label">Album description:</td>
+				<td>
+
+<div class="box vertical_space body hidden preview_wrap" id="preview_wrap_0">
+	<div id="preview_0"></div>
+</div>
+
+<div id="textarea_wrap_0" class="field_div textarea_wrap">
+	<textarea name="album_desc" id="album_desc" cols="60" rows="8"   >[size=4]Disc 1 (01:14:16)[/size]
+[b]1.[/b] Le Poin&ccedil;onneur des Lilas [i](02:48)[/i]
+[b]2.[/b] Le Cirque [i](03:38)[/i]
+[b]3.[/b] La marquise a dit [i](03:02)[/i]
+[b]4.[/b] La lune est morte [i](03:02)[/i]
+[b]5.[/b] La fontaine est profonde [i](02:26)[/i]
+[b]6.[/b] B&eacute;ton arm&eacute; [i](03:18)[/i]
+[b]7.[/b] Les Bo&icirc;tes &agrave; musique [i](03:02)[/i]
+[b]8.[/b] Faut bien qu&#39;on vive [i](03:09)[/i]
+[b]9.[/b] La Queue du chat [i](03:40)[/i]
+[b]10.[/b] Rue des Blancs-Manteaux [i](01:51)[/i]
+[b]11.[/b] Chanson pour un jour de pluie [i](03:20)[/i]
+[b]12.[/b] &Agrave; la Saint M&eacute;dard [i](02:58)[/i]
+[b]13.[/b] Le Quartier des Halles [i](03:06)[/i]
+[b]14.[/b] Place de la Concorde [i](03:00)[/i]
+[b]15.[/b] Nos 400 coups [i](03:40)[/i]
+[b]16.[/b] En sortant de l&#39;&eacute;cole [i](02:25)[/i]
+[b]17.[/b] Jour de col&egrave;re [i](04:12)[/i]
+[b]18.[/b] Enfance [i](01:58)[/i]
+[b]19.[/b] Monsieur William [i](03:27)[/i]
+[b]20.[/b] La Souris d&#39;Angleterre [i](02:35)[/i]
+[b]21.[/b] Barbara [i](03:58)[/i]
+[b]22.[/b] Fleur d&#39;atelier [i](03:25)[/i]
+[b]23.[/b] Brave marin [i](03:37)[/i]
+[b]24.[/b] Tournesol [i](02:39)[/i]
+
+[size=4]Disc 2 (01:15:49)[/size]
+[b]1.[/b] Barbarie [i](03:14)[/i]
+[b]2.[/b] Faut tout &ccedil;a [i](02:40)[/i]
+[b]3.[/b] L&#39;Orgue de barbarie [i](03:03)[/i]
+[b]4.[/b] Si tu t&#39;imagines [i](03:01)[/i]
+[b]5.[/b] Les Vieux Messieurs du Luxembourg [i](03:45)[/i]
+[b]6.[/b] Son nombril [i](06:31)[/i]
+[b]7.[/b] Les Quatre Jupons [i](03:56)[/i]
+[b]8.[/b] Bain, amour, etc. [i](03:34)[/i]
+[b]9.[/b] C&#39;&eacute;tait la premi&egrave;re fois [i](03:14)[/i]
+[b]10.[/b] Voyage au bout de la rue [i](03:48)[/i]
+[b]11.[/b] J&#39;entends ma Lisette [i](01:50)[/i]
+[b]12.[/b] La Truite [i](03:56)[/i]
+[b]13.[/b] Le Li&egrave;vre et la Tortue [i](02:47)[/i]
+[b]14.[/b] Inventaire [i](03:14)[/i]
+[b]15.[/b] Amour en 19 ponts [i](01:48)[/i]
+[b]16.[/b] Ad&eacute;la&iuml;de [i](03:43)[/i]
+[b]17.[/b] Le R&eacute;sum&eacute; de la situation [i](01:48)[/i]
+[b]18.[/b] Le Moucheur de chandelles [i](03:20)[/i]
+[b]19.[/b] Complainte m&eacute;canique [i](02:51)[/i]
+[b]20.[/b] Le Miroir bris&eacute; [i](01:28)[/i]
+[b]21.[/b] Papa peint dans les bois [i](03:06)[/i]
+[b]22.[/b] Les Clochards [i](04:12)[/i]
+[b]23.[/b] Dans l&#39;eau de la claire fontaine [i](02:23)[/i]
+[b]24.[/b] Compagnons des mauvais jours [i](02:37)[/i]
+
+[b]Total length:[/b] 02:30:05
+
+More information: [url]https://musicbrainz.org/release/42ce2996-f9dd-469b-93d4-f75935ccf221[/url]</textarea>
+</div>
+<div class="submit_div preview_submit">
+	<input type="button" value="Preview" class="hidden button_preview_0" />
+</div>
+					<p class="min_padding">Contains background information such as album history and maybe a review.</p>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">Release description (optional):</td>
+				<td>
+
+<div class="box vertical_space body hidden preview_wrap" id="preview_wrap_1">
+	<div id="preview_1"></div>
+</div>
+
+<div id="textarea_wrap_1" class="field_div textarea_wrap">
+	<textarea name="release_desc" id="release_desc" cols="60" rows="8"  >Personal rip.
+Tagged thanks to Musicbrainz Picard (its fetching feature saved me much time, since there are more than 60 differents composers / lyricists!)
+
+Uploaded with GazelleSync (RED to APL). Many thanks to the original uploader!</textarea>
+</div>
+<div class="submit_div preview_submit">
+	<input type="button" value="Preview" class="hidden button_preview_1" />
+</div>
+					<p class="min_padding">Contains information like encoder settings or details of the ripping process. <strong class="important_text">Do not paste the ripping log here.</strong></p>
+				</td>
+			</tr>
+		</table>
+		</div>
+		<table cellpadding="3" cellspacing="1" border="0" class="layout border slice" width="100%">
+			<tr>
+				<td colspan="2" style="text-align: center;">
+					<p>Be sure that your torrent is approved by the <a href="rules.php?p=upload" target="_blank">rules</a>. Not doing this will result in a <strong class="important_text">warning</strong> or <strong class="important_text">worse</strong>.</p>
+					<p>After uploading the torrent, you will have a one hour grace period during which no one other than you can fill requests with this torrent. Make use of this time wisely, and <a href="requests.php" target="_blank">search the list of requests</a>.</p>
+					<input id="post" type="submit" value="Upload torrent" />
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+<script type="text/javascript">
+	Format(true);
+	Bitrate();
+</script>
+</div>
+<script type="text/javascript" src="static/functions/textareapreview.class.js?v=1538226512"></script>
+
+<script type="text/javascript" class="preview_code">
+	$(document).ready(function () { TextareaPreview.factory([[0, "album_desc"], [1, "release_desc"]]); });
+</script>
+<div id="footer">
+	<p>Site and design &copy; 2018 Orpheus</p>
+	<p>
+		<a href="user.php?action=sessions">
+			<span class="tooltip" title="Manage sessions">Last activity: </span><span class="time tooltip" title="Nov 10 2018, 20:36">2 mins ago</span><span class="tooltip" title="Manage sessions"> from 90.29.125.156.</span>
+		</a>
+	</p>
+	<p>
+		<strong>Time:</strong> <span>16.43491 ms</span>
+		<strong>Used:</strong> <span>2.00 MB</span>
+		<strong>Load:</strong> <span>14.84 7.94 5.83</span>
+		<strong>Date:</strong> <span id="site_date">Nov 10 2018</span>, <span id="site_time">20:39</span>
+
+	</p>
+	</div>
+
+</div>
+<div id="lightbox" class="lightbox hidden"></div>
+<div id="curtain" class="curtain hidden"></div>
+<!-- Extra divs, for stylesheet developers to add imagery -->
+<div id="extra1"><span></span></div>
+<div id="extra2"><span></span></div>
+<div id="extra3"><span></span></div>
+<div id="extra4"><span></span></div>
+<div id="extra5"><span></span></div>
+<div id="extra6"><span></span></div>
+</body>
+</html>

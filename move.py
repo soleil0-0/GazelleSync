@@ -96,15 +96,15 @@ def st(inp):
 	return s.get_data()
 
 def strip_tags(inp):
-	APLAPI = None
-	if sourceAPI.site == "APL":
-		APLAPI = sourceAPI
-	elif destAPI.site == "APL":
-		APLAPI = destAPI
-	if APLAPI is None:
+	OPSAPI = None
+	if sourceAPI.site == "OPS":
+		OPSAPI = sourceAPI
+	elif destAPI.site == "OPS":
+		OPSAPI = destAPI
+	if OPSAPI is None:
 		return st(inp)
 	else:
-		return APLAPI.HTMLtoBBCODE(inp)
+		return OPSAPI.HTMLtoBBCODE(inp)
 
 def unescape(inp):
 	return html.unescape(inp)
@@ -196,7 +196,7 @@ def parseArguments(args):
 		raise Exception('Not all arguments are present.')
 
 	if not validateTrackers(result):
-		raise Exception("Trackers can only be RED, APL, and NWCD")
+		raise Exception("Trackers can only be RED, OPS, and NWCD")
 
 	if ("tid" in result):
 		if not int(result["tid"]):
@@ -223,8 +223,8 @@ def generateSourceTrackerAPI(tracker):
 		print("Source tracker is RED")
 		return RedApi(username=constants.RedUsername, password=constants.RedPassword)
 	elif tracker == "apl":
-		print("Source tracker is APL")
-		return XanaxAPI(username=constants.ApolloUsername, password=constants.ApolloPassword)
+		print("Source tracker is OPS")
+		return XanaxAPI(username=constants.OrpheusUsername, password=constants.OrpheusPassword)
 	elif tracker == "nwcd":
 		print("Source tracker is NWCD")
 		return NwAPI(username=constants.NWCDUsername, password=constants.NWCDPassword)
@@ -234,8 +234,8 @@ def generateDestinationTrackerAPI(tracker):
 		print("Destination tracker is RED")
 		return WhatAPI(username=constants.RedUsername, password=constants.RedPassword, tracker = "https://flacsfor.me/{0}/announce", url = "https://redacted.ch/", site = "RED")
 	elif tracker == "apl":
-		print("Destination tracker is APL")
-		return WhatAPI(username=constants.ApolloUsername, password=constants.ApolloPassword, tracker = "https://mars.apollo.rip/{0}/announce", url = "https://apollo.rip/", site = "APL")
+		print("Destination tracker is OPS")
+		return WhatAPI(username=constants.OrpheusUsername, password=constants.OrpheusPassword, tracker = "https://home.opsfet.ch/{0}/announce", url = "https://orpheus.network/", site = "OPS")
 	elif tracker == "nwcd":
 		print("Destination tracker is NWCD")
 		return WhatAPI(username=constants.NWCDUsername, password=constants.NWCDPassword, tracker = "https://definitely.notwhat.cd:443/{0}/announce", url = "https://notwhat.cd/", site = "NWCD")
@@ -244,7 +244,7 @@ def generateSourceFlag(tracker):
 	if tracker == "red":
 		return "RED"
 	elif tracker == "apl":
-		return "APL"
+		return "OPS"
 	elif tracker == "nwcd":
 		return "nwcd"
 
@@ -430,7 +430,7 @@ def moveAlbum(parsedArgs, a, w, source):
 	t_media = tdata["media"]
 	t_format = tdata["format"]
 	t_encoding = tdata["encoding"]
-	t_description = tdata["description"] + "\n\nUploaded with GazelleSync."
+	t_description = tdata["description"] + "\n\nUploaded with GazelleSync ("+parsedArgs["from"].upper()+" to "+parsedArgs["to"].upper()+"). Many thanks to the original uploader!"
 	t_remasterYear = tdata["remasterYear"]
 	t_remasterCatalogueNumber = tdata["remasterCatalogueNumber"]
 	t_remastered = tdata["remastered"]
@@ -547,8 +547,8 @@ def moveAlbum(parsedArgs, a, w, source):
 
 
 __version__ = "1.4"
-__site_url__ = "https://apollo.rip"
-__torrent_url__ = "https://mars.apollo.rip"
+__site_url__ = "https://orpheus.network"
+__torrent_url__ = "https://home.opsfet.ch"
 
 parsedArgs = parseArguments(sys.argv)
 
