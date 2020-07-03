@@ -7,3 +7,5 @@ RedPassword = ""
 
 NWCDUsername = ""
 NWCDPassword = ""
+
+directory = ""

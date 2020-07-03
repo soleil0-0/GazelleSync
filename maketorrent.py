@@ -102,6 +102,13 @@ class TorrentMetadata(object):
 		self.__webseeds = []
 		self.__pad_files = False
 		self.__source = ''
+		self.skip = [
+			"Thumbs.db",
+			"edition.txt",
+			"tracklist.txt",
+			"formatted_tracklist.txt",
+			"credits.txt",
+		]
 
 	def save(self, torrent_path, progress=None):
 		"""Creates and saves the torrent file to `path`.
@@ -123,7 +130,7 @@ class TorrentMetadata(object):
 		}
 
 		if self.source:
-			torrent['source'] = self.source
+			torrent['info']['source'] = self.source
 
 		if self.comment:
 			torrent['comment'] = self.comment
@@ -133,7 +140,7 @@ class TorrentMetadata(object):
 
 		if self.trackers:
 			torrent['announce'] = self.trackers[0][0]
-			torrent['announce-list'] = self.trackers
+			#torrent['announce-list'] = self.trackers
 		else:
 			torrent['announce'] = ''
 
@@ -176,8 +183,8 @@ class TorrentMetadata(object):
 			# Collect a list of file paths and add padding files if necessary
 			for (dirpath, dirnames, filenames) in os.walk(self.data_path):
 				for index, filename in enumerate(filenames):
-					if filename == "Thumbs.db" or filename == "edition.txt" or filename == "tracklist.txt" or filename == "formatted_tracklist.txt" or filename.endswith(".torrent") or filename.endswith(".json") or filename.endswith(".ini") or filename.endswith(".ico"):
-						print("Skipped thumbs.db")
+					if filename in self.skip or filename.endswith(".torrent") or filename.endswith(".json") or filename.endswith(".ini") or filename.endswith(".ico"):
+						print("Skipped", filename)
 					else:
 						size = get_path_size(os.path.join(self.data_path, dirpath, filename))
 						p = dirpath[len(self.data_path):]

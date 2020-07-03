@@ -1,58 +1,119 @@
-from __future__ import print_function, division
+# -*-coding=utf-8 -*-
 
-import sys
+import sys, hashlib
 import re
 import os
 import json
 import time
 import requests
-import mechanize
-import HTMLParser
-from cStringIO import StringIO
 import maketorrent
 from redapi import RedApi
 from whatapi import WhatAPI
 from nwapi import NwAPI
 from xanaxapi import XanaxAPI
-
+from shutil import copyfile
+import bencode
 import constants
+import html
+from html.parser import HTMLParser
 
-tempHTML = HTMLParser.HTMLParser()
+#sys.stdout = open('out.txt', 'w')
 
-class MLStripper(HTMLParser.HTMLParser):
+"""
+TO Do:
+Import composer info and such.
+"""
+
+"""
+This is the changelog:
+Version 1.0:
+ - Has the ability to create torrents. No need to find the old .torrent file.
+ - Moved login data to constants.py.
+
+Version 2.1:
+ - Torrentpath argument has been deprecated.
+ - Fixed tons of bugs.
+ - Added source option.
+
+Version 2.2:
+ - Allows you to paste the whle link into the GUI.
+
+Version 3.0:
+ - Added support for folder that contains all other album folders.
+
+Version 4.0:
+ - Added the ability to find torrent metadata by using the infohash.
+ - Added the correct flag for every site.
+ - Added the ability to specify a directory where the .torrent file will be copied to. This is done in the config file.
+ - Fixed all (most) issues with unicode printing.
+ - Added the ability to check for duplicates on the site. It is a very well designed algorithm IMO.
+ - Alloing the script to accept the entire link now. works with "link=...".
+ - removed the need for group ID. Thanks itismadness for pointing that out.
+
+Version 5.0:
+ - Moved to python 5.0
+ - Fixed a few issues
+ - Rebranding as GazelleSync
+"""
+
+"""
+Argument flowchart
+
+ - to: tracker the torrent will be moved to
+ - from: tracker the torrent comes from
+
+IF I want to point to the exact folder of the album
+ - album: the folder of the album
+ELSE
+ - folder: the folder that contauins all albums. The album folder will be extracted from the site metadata
+END
+
+IF I want to get the torrent ID from the site
+ - tid: the torrent ID
+ELSEIF I want to get the torrent ID from the permalink
+ - link: the whole permalinlk. The tool os smart enough to extract it
+ELSEIF I want to point to a .torrent file
+ - tpath: the path that points towards the .torrent file. The infohash will be computed
+ELSEIF I want to point to a directory full of .torrent fioles, and each oth these will be processed
+ - tfolder: the folder containing all the .torrent files
+END
+"""
+
+class MLStripper(HTMLParser):
 	def __init__(self):
 		self.reset()
+		self.strict = False
+		self.convert_charrefs= True
 		self.fed = []
 	def handle_data(self, d):
 		self.fed.append(d)
 	def get_data(self):
 		return ''.join(self.fed)
 
-def strip_tags(html):
+def st(inp):
 	s = MLStripper()
-	s.feed(html)
+	s.feed(inp)
 	return s.get_data()
 
+def strip_tags(inp):
+	APLAPI = None
+	if sourceAPI.site == "APL":
+		APLAPI = sourceAPI
+	elif destAPI.site == "APL":
+		APLAPI = destAPI
+	if APLAPI is None:
+		return st(inp)
+	else:
+		return APLAPI.HTMLtoBBCODE(inp)
+
 def unescape(inp):
-	return tempHTML.unescape(inp)
+	return html.unescape(inp)
 
 def toUnicode(inp):
 	if isinstance(inp, unicode):
 		return inp
 	else:
 		return unicode(inp, sys.getfilesystemencoding())
-
-
-#folder torrentpath TorrentIDRed GroupIDsource AlbumIDApollo
-
-
-#folder = sys.argv[1]
-#TorrentIDsource = sys.argv[2]
-#GroupIDsource = sys.argv[3]
-#if len(sys.argv) > 4:
-#	AlbumIDApollo = sys.argv[4]
-#else:
-#	AlbumIDApollo = None
 
 def sprint(*r):
 	try:
@@ -88,13 +149,17 @@ possible = {
 	"from",
 	"to",
 	"tid",
-	"gid",
-	"folder"
+	"folder",
+	"link",
+	"tpath",
+	"tfolder"
 }
 
 def validateTrackers(result):
 	result["to"] = result["to"].lower()
 	result["from"] = result["from"].lower()
+
+	#print(result["to"], result["from"])
 
 	if result["to"] == result["from"]:
 		return False
@@ -107,8 +172,10 @@ def parseArguments(args):
 		comp[c] = False
 
 	result = dict()
+	sprint("======================")
 	for a in args:
-		#sprint(a)
+		sprint(a)
+		sprint("+++")
 		for p in possible:
 			if a.startswith(p):
 				result[p] = a[len(p)+1:]
@@ -121,25 +188,35 @@ def parseArguments(args):
 	allTrue = True
 	for c in comp:
 		allTrue = allTrue and comp[c]
-	sprint("All true", allTrue)
+	#sprint("All true", allTrue)
 	if not allTrue:
 		print("The following arguments are compulsory")
 		for c in compulsory:
 			sprint(c)
-		raise('Error')
-	tr = validateTrackers(result)
-	if not tr:
-		raise("Trackers can only be RED, APL, and NWCD")
+		raise Exception('Not all arguments are present.')
 
-	if ("gid" in result):
-		if not int(result["gid"]):
-			raise("gid arguemtn has to be number")
+	if not validateTrackers(result):
+		raise Exception("Trackers can only be RED, APL, and NWCD")
 
 	if ("tid" in result):
 		if not int(result["tid"]):
-			raise("gid arguemtn has to be number")
+			raise("gid argument has to be a number")
 
 	return result
+
+def parseLink(link):
+	ids = re.findall("id=(\d+)&torrentid=(\d+)", link)
+	return ids[0][0], ids[0][1]
+
+def getTorrentHash(path):
+	print(path)
+	torrent_file = open(path, "rb")
+	metainfo = bencode.bdecode(torrent_file.read())
+	print("Keys")
+	for i in metainfo:
+		print(i)
+	info = metainfo[b'info']
+	return hashlib.sha1(bencode.bencode(info)).hexdigest().upper()
 
 def generateSourceTrackerAPI(tracker):
 	if tracker == "red":
@@ -155,34 +232,185 @@ def generateSourceTrackerAPI(tracker):
 def generateDestinationTrackerAPI(tracker):
 	if tracker == "red":
 		print("Destination tracker is RED")
-		return WhatAPI(username=constants.RedUsername, password=constants.RedPassword, tracker = "https://flacsfor.me/", url = "https://redacted.ch/")
+		return WhatAPI(username=constants.RedUsername, password=constants.RedPassword, tracker = "https://flacsfor.me/{0}/announce", url = "https://redacted.ch/", site = "RED")
 	elif tracker == "apl":
 		print("Destination tracker is APL")
-		return WhatAPI(username=constants.ApolloUsername, password=constants.ApolloPassword, tracker = "https://mars.apollo.rip/", url = "https://apollo.rip/")
+		return WhatAPI(username=constants.ApolloUsername, password=constants.ApolloPassword, tracker = "https://mars.apollo.rip/{0}/announce", url = "https://apollo.rip/", site = "APL")
 	elif tracker == "nwcd":
 		print("Destination tracker is NWCD")
-		return WhatAPI(username=constants.NWCDUsername, password=constants.NWCDPassword, tracker = "https://definitely.notwhat.cd:443/", url = "https://notwhat.cd/")
+		return WhatAPI(username=constants.NWCDUsername, password=constants.NWCDPassword, tracker = "https://definitely.notwhat.cd:443/{0}/announce", url = "https://notwhat.cd/", site = "NWCD")
+
+def generateSourceFlag(tracker):
+	if tracker == "red":
+		return "RED"
+	elif tracker == "apl":
+		return "APL"
+	elif tracker == "nwcd":
+		return "nwcd"
+
+def getReleases(tracker, response, artist_name, group_name):
+	ret = list()
+	l = len(group_name)
+
+	if len(response["results"]) == 0:
+		return ret
+
+	pages = response["pages"]
+	if pages > 1:
+		for group in response["results"]:
+			if len(group["groupName"]) == l:
+				ret.append(group)
+		for index in range(2,pages+1):
+			resp = tracker.request("browse", artistname=artist_name, groupname=group_name, page=index)
+			for group in resp["results"]:
+				if len(group["groupName"]) == l:
+					ret.append(group)
+	else:
+		for group in response["results"]:
+			if len(group["groupName"]) == l:
+				ret.append(group)
+	rett = list()
+	for album in ret:
+		for t in album["torrents"]:
+			rett.append(t)
+	return rett
+
+def isSame(first, second, what):
+	sprint(what, first[what], second[what], first[what] == second[what])
+	return first[what] == second[what]
+
+def filterResults(meta, ts):
+	#has to be equal: encoding, scene, media, format, remastered, remasterRecordLabel, remasterTitle, remasterYear, remasterCatalogueNumber
+	#has to be better: logScore, hasCue, hasLog
+
+	tdata = meta["torrent"]
+	#isBetterThan
+
+	temp = list()
+	for t in ts:
+		if isSame(tdata, t, "encoding") and isSame(tdata, t, "scene") and isSame(tdata, t, "media") and isSame(tdata, t, "format") and isSame(tdata, t, "remastered"):
+			if tdata["remastered"]:
+				if isSame(tdata, t, "remasterYear") and isSame(tdata, t, "remasterCatalogueNumber") and isSame(tdata, t, "remasterRecordLabel") and isSame(tdata, t, "remasterTitle"):
+					temp.append(t)
+			else:
+				temp.append(t)
+
+	final = list()
+	for t in temp:
+		if t["logScore"] > tdata["logScore"]:
+			final.append(t)
+		elif t["logScore"] == tdata["logScore"]:
+			if isSame(tdata, t, "hasCue"):
+				final.append(t)
+			elif t["hasCue"]:
+				final.append(t)
+	return final
 
 
+def checkForDuplicate(tracker, meta):
+	#find all artists
+	#look if they have such a release
+	#if one of them has it, it is a duplicate --> also add the artist to the other artists
+	# if none does, all is perfect
+	rawResults = dict()
+	results = dict()
 
-def moveAlbum(parsedArgs, a, w):
+	group_name = meta["group"]["name"]
 
-	TorrentIDsource = parsedArgs["tid"]
-	GroupIDsource = parsedArgs["gid"]
-	folder = ""
+	for artist_data in meta["group"]["musicInfo"]["artists"]:
+		artist_name = artist_data["name"]
+		rawResults[artist_name] = tracker.request("browse", artistname=artist_name, groupname=group_name)
+		results[artist_name] = getReleases(tracker, rawResults[artist_name], artist_name, group_name)
 
-	sprint("Source", a.tracker)
-	sprint("Dest", w.tracker)
-
-	tdata = a.get_torrent_info(TorrentIDsource)
-	f = open("torrent.json","w")
-	f.write(json.dumps(tdata,indent=4))
+	f = open("similar.json","w")
+	f.write(json.dumps(results,indent=4))
 	f.close()
+
+	isDupe = False
+	sprint("Comparing")
+	filteredResults = dict()
+	for artist in results:
+		filteredResults[artist] = filterResults(meta, results[artist])
+		#sprint(len(filteredResults[artist]))
+		if len(filteredResults[artist]) > 0:
+			isDupe = True
+
+	f = open("similarFiltered.json","w")
+	f.write(json.dumps(filteredResults,indent=4))
+	f.close()
+	return isDupe
+
+def genaratePrettyName(artists, name, year, format, bitrate, media, recordLabel, catalogueNumber, editionTitle):
+	artistString = ""
+	print("Artists")
+	print(artists)
+	if len(artists["artists"]) == 1:
+		artistString = artists["artists"][0]["name"]
+	if len(artists["artists"]) == 2:
+		artistString = artists["artists"][0]["name"] + " & " + artists["artists"][1]["name"]
+	else:
+		artistString = "Various Artists"
+
+	formatString = ""
+	if bitrate == "Lossless":
+		formatString = "{0} {1}".format(format, media)
+	else:
+		formatString = "{0} {1} {2}".format(format, bitrate, media)
+
+	base = "{0} - {1} ({2}) [{3}]".format(artistString, name, year, formatString)
+
+	additionalInfoBuff = list()
+	if recordLabel != "" and (not recordLabel is None):
+		additionalInfoBuff.append(recordLabel)
+	if catalogueNumber != "" and (not catalogueNumber is None):
+		additionalInfoBuff.append(catalogueNumber)
+	if editionTitle != "" and (not editionTitle is None):
+		additionalInfoBuff.append(editionTitle)
+
+	additionalInfo = " - ".join(additionalInfoBuff)
+
+	if additionalInfo != "" and (not additionalInfo is None):
+		base = base + " " + "{" + additionalInfo + "}"
+
+	return base
+
+artistImportances = {
+	"Main": "1",
+	"Guest": "2",
+	"Composer": "4",
+	"Conductor": "5",
+	"DJ / Compiler": "6",
+	"Compiler": "6",
+	"DJ": "6",
+	"Remixer": "3",
+	"Producer": "7",
+}
+
+def moveAlbum(parsedArgs, a, w, source):
+	sprint(parsedArgs)
+	data = None
+
+	if "hash" in parsedArgs:
+		sprint(parsedArgs["hash"], len(parsedArgs["hash"]))
+		data = a.get_torrent_info(hash=parsedArgs["hash"])
+	else:
+		TorrentIDsource = parsedArgs["tid"]
+		data = a.get_torrent_info(id=TorrentIDsource)
 	
-	gdata = a.request("torrentgroup", id=GroupIDsource)
-	f = open("group.json","w")
-	f.write(json.dumps(gdata,indent=4))
+	tdata = data["torrent"]
+	g_group = data["group"]
+
+	GroupIDsource = g_group["id"]
+	TorrentIDsource = tdata["id"]
+
+	if not os.path.exists("meta"):
+		os.makedirs("meta")
+
+	f = open("meta\\" + str(TorrentIDsource) + ".json","w")
+	f.write(json.dumps(data,indent=4))
 	f.close()
+
+	folder = ""
 
 	if "album" in parsedArgs:
 		folder = parsedArgs["album"]
@@ -191,21 +419,25 @@ def moveAlbum(parsedArgs, a, w):
 		sprint("Folder:", folder, "====")
 	else:
 		raise Exception("Failed to find path")
+
+	isDupe = checkForDuplicate(w, data)
 	
-	
+	sprint("Duplicate:", isDupe)
+
+	if isDupe:
+		return
 	
 	t_media = tdata["media"]
 	t_format = tdata["format"]
 	t_encoding = tdata["encoding"]
-	t_description = tdata["description"] + "\n\nUploaded with "+parsedArgs["from"].upper()+" to "+parsedArgs["to"].upper()+"."
+	t_description = tdata["description"] + "\n\nUploaded with GazelleSync."
 	t_remasterYear = tdata["remasterYear"]
 	t_remasterCatalogueNumber = tdata["remasterCatalogueNumber"]
 	t_remastered = tdata["remastered"]
 	t_remasterRecordLabel = tdata["remasterRecordLabel"]
 	t_remasterTitle = tdata["remasterTitle"]
 	
-	g_group = gdata["group"]
-	g_artists = g_group["musicInfo"]["artists"]
+	g_artists = g_group["musicInfo"]
 	g_name = g_group["name"]
 	g_year = g_group["year"]
 	g_recordLabel = g_group["recordLabel"]
@@ -213,16 +445,16 @@ def moveAlbum(parsedArgs, a, w):
 	g_releaseType = g_group["releaseType"]
 	g_tags = g_group["tags"]
 	#g_wikiImage = g_group["wikiImage"]
+	#"""
 	if parsedArgs["to"] != "nwcd":
 		g_wikiImage = g_group["wikiImage"]
 	else:
-		g_wikiImage = "https://art.notwhat.co/bc7b34debc056ee22d69ebdc1f189050.jpg"
+		g_wikiImage = destAPI.img(g_group["wikiImage"])
+	#"""
 
 	g_wikiBody = strip_tags(g_group["wikiBody"]) #.replace("<br />", "\n")
+	#g_wikiBody = g_group["wikiBody"]
 	g_group["wikiBody"] = g_group["wikiBody"].replace("\r\n", "\n")
-	#g_group["wikiBody"] = g_group["wikiBody"].replace("\n\n", "\n")
-	#g_group["wikiBody"] = g_group["wikiBody"].replace("\n\n", "\n")
-	#g_group["wikiBody"] = g_group["wikiBody"].replace("\n\n", "\n")
 	
 	album = dict(
 		album = g_name,
@@ -243,65 +475,75 @@ def moveAlbum(parsedArgs, a, w):
 	)
 	
 	artists = list()
-	count = 0
-	for i,v in enumerate(g_artists):
-		artists.append(v["name"])
+	for i,v in enumerate(g_artists["composers"]):
+		artists.append((v["name"], artistImportances.get("Composer", 1)))
+
+	for i,v in enumerate(g_artists["dj"]):
+		artists.append((v["name"], artistImportances.get("DJ", 1)))
+
+	for i,v in enumerate(g_artists["artists"]):
+		artists.append((v["name"], artistImportances.get("Main", 1)))
+
+	for i,v in enumerate(g_artists["with"]):
+		artists.append((v["name"], artistImportances.get("Guest", 1)))
+
+	for i,v in enumerate(g_artists["conductor"]):
+		artists.append((v["name"], artistImportances.get("Conductor", 1)))
+
+	for i,v in enumerate(g_artists["remixedBy"]):
+		artists.append((v["name"], artistImportances.get("Remixer", 1)))
+
+	for i,v in enumerate(g_artists["producer"]):
+		artists.append((v["name"], artistImportances.get("Producer", 1)))
 	
-	print(album["album"])
+	sprint(album["album"])
 	
 	tempfolder = "torrent"
 	
 	if not os.path.exists(tempfolder):
 		os.makedirs(tempfolder)
-	
-	
-	artist_name = ""
-	
-	if len(g_artists) > 2:
-		artist_name = "Various Artists"
-	elif len(g_artists) == 1:
-		artist_name = g_artists[0]["name"]
-	else:
-		artist_name = g_artists[0]["name"] + " & " + g_artists[1]["name"]
-	
-	edition = ""
+
 	if t_remastered:
-		if t_remasterCatalogueNumber:
-			edition = " {" + t_remasterCatalogueNumber + "}"
-		else:
-			edition = ""
+		releaseYear = t_remasterYear
+		releaseRecordLabel = t_remasterRecordLabel
+		releaseCatNum = t_remasterCatalogueNumber
 	else:
-		if g_catalogueNumber:
-			edition = " {" + g_catalogueNumber + "}"
-		else:
-			edition = ""
+		releaseYear = g_year
+		releaseRecordLabel = g_recordLabel
+		releaseCatNum = g_catalogueNumber
 	
-	name = artist_name+" - "+g_name+" ("+str(g_year)+") ["+t_media+" "+t_format+ " " + t_encoding + "]" + edition
+	newFolderName = genaratePrettyName(g_artists, g_name, releaseYear, t_format, t_encoding, t_media, releaseRecordLabel, releaseCatNum, t_remasterTitle)
+
+	print("New path is", newFolderName)
+	#input()
 	
-	tpath = name+".torrent"
+	tpath = newFolderName +".torrent"
 	
 	tpath = tpath.replace("/", "_")
 	tpath = tpath.replace("\\", "_")
 	tpath = tpath.replace(":", "_")
 	
-	tpath = "torrent/"+tpath
+	#tpath = "torrent/"+tpath
 	
-	print(tpath)
-	print("Folder", folder)
-	folder = toUnicode(folder)
+	sprint(tpath)
+	sprint("Folder", folder)
+	#folder = toUnicode(folder)
 
-	print("Folder", folder)
+	sprint("Folder", folder)
 	#raw_input()
 	
 	t = maketorrent.TorrentMetadata()
 	t.set_data_path(folder)
-	t.set_comment("Created with Gazelle to Apollo")
+	t.set_comment("Created with GazelleSync")
 	t.set_private(True)
-	t.set_trackers([["https://mars.apollo.rip/"+w.passkey+"/announce"]])
-	t.set_source("APL")
-	t.save(tpath)
+	t.set_trackers([[destAPI.tracker]])
+	t.set_source(source)
+	t.save("torrent/"+tpath)
 	
-	w.upload(folder, tempfolder, album, g_tags, g_wikiImage, artists, tpath)
+	w.upload(folder, tempfolder, album, g_tags, g_wikiImage, artists, "torrent/"+tpath)
+
+	if constants.directory != "":
+		copyfile("torrent/"+tpath, os.path.join(constants.directory, tpath))
 
 
 __version__ = "1.4"
@@ -310,13 +552,49 @@ __torrent_url__ = "https://mars.apollo.rip"
 
 parsedArgs = parseArguments(sys.argv)
 
+#sprint(parsedArgs)
+
+if not ("tid" in parsedArgs):
+	if "link" in parsedArgs:
+		parsedArgs["gid"], parsedArgs["tid"] = parseLink(parsedArgs["link"])
+	elif "tpath" in parsedArgs:
+		print("Tpath:", parsedArgs["tpath"])
+		parsedArgs["hash"] = getTorrentHash(parsedArgs["tpath"])
+	elif "tfolder" in parsedArgs:
+		pass
+	else:
+		raise Exception("Houston, we do not have enough information to proceed. Chack your arguments.")
+
 sourceAPI = generateSourceTrackerAPI(parsedArgs["from"])
 
 destAPI = generateDestinationTrackerAPI(parsedArgs["to"])
 
-sprint(parsedArgs)
-print(sys.getdefaultencoding())
+source = generateSourceFlag(parsedArgs["to"])
+
+#sprint(parsedArgs)
+#print(sys.getdefaultencoding())
 
 #raw_input()
 
-moveAlbum(parsedArgs, sourceAPI, destAPI)
+if "tfolder" in parsedArgs:
+	sprint("Batch mode")
+	total = 0
+	fails = 0
+	for filename in os.listdir(parsedArgs["tfolder"]):
+		if filename.endswith(".torrent"):
+			total += 1
+			try:
+				localParsed = dict()
+				for i in parsedArgs:
+					localParsed[i] = parsedArgs[i]
+				localParsed["tpath"] = os.path.join(localParsed["tfolder"], filename)
+				localParsed["hash"] = getTorrentHash(localParsed["tpath"])
+				sprint(localParsed)
+				moveAlbum(localParsed, sourceAPI, destAPI, source)
+			except Exception as e:
+				fails += 1
+			sprint("Success rate:", 1 - fails/total)
+	sprint("Success rate:", 1 - fails/total)
+else:
+	sprint("Single mode")
+	moveAlbum(parsedArgs, sourceAPI, destAPI, source)
