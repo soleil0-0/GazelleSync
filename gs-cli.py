@@ -16,7 +16,7 @@ from shutil import copyfile
 import bencode
 import html
 from html.parser import HTMLParser
-import configparser
+from configparser import ConfigParser
 
 #sys.stdout = open('out.txt', 'w')
 
@@ -232,30 +232,30 @@ def getTorrentHash(path):
 def generateSourceTrackerAPI(tracker):
 	if tracker == "red":
 		print("Source tracker is RED")
-		return RedApi(username=config.get('RED', 'Username').split('"')[1], password=config.get('RED', 'Password').split('"')[1])
+		return RedApi(username=config.get('RED', 'Username'), password=config.get('RED', 'Password'))
 	elif tracker == "ops":
 		print("Source tracker is OPS")
-		return XanaxAPI(username=config.get('OPS', 'Username').split('"')[1], password=config.get('OPS', 'Password').split('"')[1])
+		return XanaxAPI(username=config.get('OPS', 'Username'), password=config.get('OPS', 'Password'))
 	elif tracker == "nwcd":
 		print("Source tracker is NWCD")
-		return NwAPI(username=config.get('NWCD', 'Username').split('"')[1], password=config.get('NWCD', 'Password').split('"')[1])
+		return NwAPI(username=config.get('NWCD', 'Username'), password=config.get('NWCD', 'Password'))
 	elif tracker == "dic":
 		print("Source tracker is DIC")
-		return DicAPI(username=config.get('DIC', 'Username').split('"')[1], password=config.get('DIC', 'Password').split('"')[1])
+		return DicAPI(username=config.get('DIC', 'Username'), password=config.get('DIC', 'Password'))
 
 def generateDestinationTrackerAPI(tracker):
 	if tracker == "red":
 		print("Destination tracker is RED")
-		return WhatAPI(username=config.get('RED', 'Username').split('"')[1], password=config.get('RED', 'Password').split('"')[1], tracker = "https://flacsfor.me/{0}/announce", url = "https://redacted.ch/", site = "RED")
+		return WhatAPI(username=config.get('RED', 'Username'), password=config.get('RED', 'Password'), tracker = "https://flacsfor.me/{0}/announce", url = "https://redacted.ch/", site = "RED")
 	elif tracker == "ops":
 		print("Destination tracker is OPS")
-		return WhatAPI(username=config.get('OPS', 'Username').split('"')[1], password=config.get('OPS', 'Password').split('"')[1], tracker = "https://home.opsfet.ch/{0}/announce", url = "https://orpheus.network/", site = "OPS")
+		return WhatAPI(username=config.get('OPS', 'Username'), password=config.get('OPS', 'Password'), tracker = "https://home.opsfet.ch/{0}/announce", url = "https://orpheus.network/", site = "OPS")
 	elif tracker == "nwcd":
 		print("Destination tracker is NWCD")
-		return WhatAPI(username=config.get('NWCD', 'Username').split('"')[1], password=config.get('NWCD', 'Password').split('"')[1], tracker = "https://definitely.notwhat.cd:443/{0}/announce", url = "https://notwhat.cd/", site = "NWCD")
+		return WhatAPI(username=config.get('NWCD', 'Username'), password=config.get('NWCD', 'Password'), tracker = "https://definitely.notwhat.cd:443/{0}/announce", url = "https://notwhat.cd/", site = "NWCD")
 	elif tracker == "dic":
 		print("Destination tracker is DIC")
-		return WhatAPI(username=config.get('DIC', 'Username').split('"')[1], password=config.get('DIC', 'Password').split('"')[1], tracker = "https://tracker.dicmusic.club/{0}/announce", url = "https://dicmusic.club/", site = "DIC")
+		return WhatAPI(username=config.get('DIC', 'Username'), password=config.get('DIC', 'Password'), tracker = "https://tracker.dicmusic.club/{0}/announce", url = "https://dicmusic.club/", site = "DIC")
 
 def generateSourceFlag(tracker):
 	if tracker == "red":
@@ -566,14 +566,14 @@ def moveAlbum(parsedArgs, a, w, source):
 	
 	w.upload(folder, tempfolder, album, g_tags, g_wikiImage, artists, "torrent/"+tpath)
 
-	if config.get("common", "directory").split('"')[1] != "":
-		copyfile(os.path.join("torrent", tpath), os.path.join(config.get("common", "directory").split('"')[1], tpath))
+	if config.get("common", "directory") != "":
+		copyfile(os.path.join("torrent", tpath), os.path.join(config.get("common", "directory"), tpath))
 
 __version__ = "1.4"
 __site_url__ = "https://orpheus.network"
 __torrent_url__ = "https://home.opsfet.ch"
 
-config = configparser.ConfigParser()
+config = ConfigParser()
 config.read(os.path.join(os.path.dirname(__file__), 'config.cfg'))
 
 parsedArgs = parseArguments(sys.argv)

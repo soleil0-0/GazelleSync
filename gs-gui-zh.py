@@ -5,9 +5,9 @@ import os
 def is_exe(fpath):
     return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
 
-move_cmd = "python move.py"
-if is_exe("move.exe") or is_exe("move"):
-  move_cmd = os.path.join(".", "move")
+move_cmd = "python gs-cli.py"
+if is_exe("gs-cli.exe") or is_exe("gs-cli"):
+  move_cmd = os.path.join(".", "gs-cli")
 
 sg.ChangeLookAndFeel('DarkBlue')
 

@@ -5,9 +5,9 @@ import os
 def is_exe(fpath):
     return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
 
-move_cmd = "python move.py"
-if is_exe("move.exe") or is_exe("move"):
-  move_cmd = os.path.join(".", "move")
+move_cmd = "python gs-cli.py"
+if is_exe("gs-cli.exe") or is_exe("gs-cli"):
+  move_cmd = os.path.join(".", "gs-cli")
 
 sg.ChangeLookAndFeel('DarkBlue')
 
@@ -63,37 +63,3 @@ while True:
     elif event is None or event == 'Exit':
         break
 window.Close()
-
-
-'''
-    if event == '_goGo_':
-        callMovePy = 'python move.py from=%(from) to=%(to)'
-        if len(values['_permalink_']) > 0 :
-            callMovePy += ' link="%(permalink)"'
-        elif len(values['_torrentFile_']) > 0:
-            callMovePy += ' tpath="%(torrentFile)"'
-        elif len(values['_torrentFolder_']) >0:
-            callMovePy += ' tpath="%(torrentFolder)"'
-
-
-        callMovePy = callMovePy + ' album="' + values['_musicFolder_'] + "\""
-        os.system(callMovePy % {'from' : values['_from_'],
-                                'to': values['_to_'],
-                                'permalink': values['_permalink_'],
-                                'torrentFile': values['_torrentFile_'],
-                                'torrentFolder': values['_torrentFolder_']})
-'''
-
-'''
-    if event == '_goGo_':
-        callMovePy = 'python move.py from=' + values['_from_'] + ' to=' + values['_to_']
-        if len(values['_permalink_']) > 0 :
-            callMovePy += ' link="' + values['_permalink_'] + '"'
-        elif len(values['_torrentFile_']) > 0:
-            callMovePy += ' tpath="' + values['_torrentFile_'] + '"'
-        elif len(values['_torrentFolder_']) >0:
-            callMovePy += ' tfolder="' + values['_torrentFolder_'] + '"'
-
-        callMovePy = callMovePy + ' album="' + values['_musicFolder_'] + '"'
-        os.system(callMovePy)
-'''

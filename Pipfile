@@ -10,7 +10,6 @@ pyinstaller = "*"
 requests = "*"
 mechanize = "*"
 pysimplegui = "*"
-configparser = "*"
 
 [requires]
 python_version = "3.7"
