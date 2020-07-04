@@ -17,10 +17,15 @@ from shutil import copyfile
 import bencode
 import html
 from html.parser import HTMLParser
-from configparser import ConfigParser
+import configparser
 
 __version__ = "5.0.4"
 #sys.stdout = open('out.txt', 'w')
+
+class MyConfigParser(configparser.RawConfigParser):
+    def get(self, section, option):
+        val = configparser.RawConfigParser.get(self, section, option)
+        return val.strip('"')
 
 class MLStripper(HTMLParser):
     def __init__(self):
@@ -544,7 +549,7 @@ def moveAlbum(parsedArgs, a, w, source):
             config.get("common", "directory"), tpath))
 
 
-config = ConfigParser()
+config = MyConfigParser()
 config.read(os.path.join(os.path.dirname(__file__), 'config.cfg'))
 
 parsedArgs = parseArguments(sys.argv)
