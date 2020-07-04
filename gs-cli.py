@@ -210,7 +210,7 @@ def generateDestinationTrackerAPI(tracker):
         return WhatAPI(username=config.get('NWCD', 'Username'), password=config.get('NWCD', 'Password'), tracker="https://definitely.notwhat.cd:443/{0}/announce", url="https://notwhat.cd/", site="NWCD")
     elif tracker == "dic":
         print("Destination tracker is DIC")
-        return WhatAPI(username=config.get('DIC', 'Username'), password=config.get('DIC', 'Password'), tracker="http://pt.kshare.club:34000/{0}/announce", url="http://pt.kshare.club/", site="DIC")
+        return WhatAPI(username=config.get('DIC', 'Username'), password=config.get('DIC', 'Password'), tracker="https://tracker.dicmusic.club/{0}/announce", url="https://dicmusic.club/", site="DIC")
 
 
 def generateSourceFlag(tracker):
