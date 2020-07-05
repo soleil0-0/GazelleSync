@@ -582,6 +582,7 @@ def main():
     # -to <>
     parser.add_argument(
         "--to",
+        choices=trackers,
         required=True,
         help="sync to which Gazelle instance"
     )
