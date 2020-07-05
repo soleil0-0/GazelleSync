@@ -62,6 +62,10 @@ class RedApi:
 		loginpage = 'https://redacted.ch/login.php'
 		data = {'username': self.username,
 				'password': self.password}
+		# TODO if proxy setting exist in system, it will cause:
+		#   requests.exceptions.ProxyError: HTTPSConnectionPool(host='redacted.ch', port=443): 
+		#     Max retries exceeded with url: /ajax.php?action=index (Caused by ProxyError('Cannot connect to proxy.',
+		#     RemoteDisconnected('Remote end closed connection without response')))
 		r = self.session.post(loginpage, data=data)
 		if r.status_code != 200:
 			raise LoginException
@@ -84,6 +88,7 @@ class RedApi:
 		params.update(kwargs)
 		r = self.session.get(ajaxpage, params=params, allow_redirects=False)
 		self.last_request = time.time()
+		# TODO if login failed, r.content.decode will be empty
 		try:
 			parsed = json.loads(r.content.decode())
 			print(parsed["status"])

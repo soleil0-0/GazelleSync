@@ -1,12 +1,21 @@
+#!/usr/bin/env python3
 # -*-coding=utf-8 -*-
 
+# imports: standard
 import sys
 import hashlib
 import re
 import os
 import json
 import time
+import html
+from html.parser import HTMLParser
+import configparser
+
+# imports: third party
 import requests
+
+# imports: custom
 import maketorrent
 from redapi import RedApi
 from whatapi import WhatAPI
@@ -15,9 +24,6 @@ from xanaxapi import XanaxAPI
 from dicapi import DicAPI
 from shutil import copyfile
 import bencode
-import html
-from html.parser import HTMLParser
-import configparser
 
 __version__ = "5.0.4"
 #sys.stdout = open('out.txt', 'w')
@@ -47,7 +53,7 @@ def st(inp):
     return s.get_data()
 
 
-def strip_tags(inp):
+def strip_tags(inp, sourceAPI, destAPI):
     HTML2BBCODE_API = None
 
     if sourceAPI.site == "OPS":
@@ -188,34 +194,34 @@ def getTorrentHash(path):
     return hashlib.sha1(bencode.bencode(info)).hexdigest().upper()
 
 
-def generateSourceTrackerAPI(tracker):
+def generateSourceTrackerAPI(tracker, username, password):
     if tracker == "red":
         print("Source tracker is RED")
-        return RedApi(username=config.get('RED', 'Username'), password=config.get('RED', 'Password'))
+        return RedApi(username=username, password=password)
     elif tracker == "ops":
         print("Source tracker is OPS")
-        return XanaxAPI(username=config.get('OPS', 'Username'), password=config.get('OPS', 'Password'))
+        return XanaxAPI(username=username, password=password)
     elif tracker == "nwcd":
         print("Source tracker is NWCD")
-        return NwAPI(username=config.get('NWCD', 'Username'), password=config.get('NWCD', 'Password'))
+        return NwAPI(username=username, password=password)
     elif tracker == "dic":
         print("Source tracker is DIC")
-        return DicAPI(username=config.get('DIC', 'Username'), password=config.get('DIC', 'Password'))
+        return DicAPI(username=username, password=password)
 
 
-def generateDestinationTrackerAPI(tracker):
+def generateDestinationTrackerAPI(tracker, username, password):
     if tracker == "red":
         print("Destination tracker is RED")
-        return WhatAPI(username=config.get('RED', 'Username'), password=config.get('RED', 'Password'), tracker="https://flacsfor.me/{0}/announce", url="https://redacted.ch/", site="RED")
+        return WhatAPI(username=username, password=password, tracker="https://flacsfor.me/{0}/announce", url="https://redacted.ch/", site="RED")
     elif tracker == "ops":
         print("Destination tracker is OPS")
-        return WhatAPI(username=config.get('OPS', 'Username'), password=config.get('OPS', 'Password'), tracker="https://home.opsfet.ch/{0}/announce", url="https://orpheus.network/", site="OPS")
+        return WhatAPI(username=username, password=password, tracker="https://home.opsfet.ch/{0}/announce", url="https://orpheus.network/", site="OPS")
     elif tracker == "nwcd":
         print("Destination tracker is NWCD")
-        return WhatAPI(username=config.get('NWCD', 'Username'), password=config.get('NWCD', 'Password'), tracker="https://definitely.notwhat.cd:443/{0}/announce", url="https://notwhat.cd/", site="NWCD")
+        return WhatAPI(username=username, password=password, tracker="https://definitely.notwhat.cd:443/{0}/announce", url="https://notwhat.cd/", site="NWCD")
     elif tracker == "dic":
         print("Destination tracker is DIC")
-        return WhatAPI(username=config.get('DIC', 'Username'), password=config.get('DIC', 'Password'), tracker="https://tracker.dicmusic.club/{0}/announce", url="https://dicmusic.club/", site="DIC")
+        return WhatAPI(username=username, password=password, tracker="https://tracker.dicmusic.club/{0}/announce", url="https://dicmusic.club/", site="DIC")
 
 
 def generateSourceFlag(tracker):
@@ -377,16 +383,16 @@ artistImportances = {
 }
 
 
-def moveAlbum(parsedArgs, a, w, source):
+def moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir):
     sprint(parsedArgs)
     data = None
 
     if "hash" in parsedArgs:
         sprint(parsedArgs["hash"], len(parsedArgs["hash"]))
-        data = a.get_torrent_info(hash=parsedArgs["hash"])
+        data = sourceAPI.get_torrent_info(hash=parsedArgs["hash"])
     else:
         TorrentIDsource = parsedArgs["tid"]
-        data = a.get_torrent_info(id=TorrentIDsource)
+        data = sourceAPI.get_torrent_info(id=TorrentIDsource)
 
     tdata = data["torrent"]
     g_group = data["group"]
@@ -412,7 +418,7 @@ def moveAlbum(parsedArgs, a, w, source):
     else:
         raise Exception("Failed to find path")
 
-    isDupe = checkForDuplicate(w, data)
+    isDupe = checkForDuplicate(destAPI, data)
 
     sprint("Duplicate:", isDupe)
 
@@ -451,7 +457,7 @@ def moveAlbum(parsedArgs, a, w, source):
         g_wikiImage = destAPI.img(g_group["wikiImage"])
     # """
 
-    g_wikiBody = strip_tags(g_group["wikiBody"])  # .replace("<br />", "\n")
+    g_wikiBody = strip_tags(g_group["wikiBody"], sourceAPI, destAPI)  # .replace("<br />", "\n")
     #g_wikiBody = g_group["wikiBody"]
     g_group["wikiBody"] = g_group["wikiBody"].replace("\r\n", "\n")
 
@@ -541,65 +547,170 @@ def moveAlbum(parsedArgs, a, w, source):
     t.set_source(source)
     t.save("torrent/"+tpath)
 
-    w.upload(folder, tempfolder, album, g_tags,
+    destAPI.upload(folder, tempfolder, album, g_tags,
              g_wikiImage, artists, "torrent/"+tpath)
 
-    if config.get("common", "directory") != "":
-        copyfile(os.path.join("torrent", tpath), os.path.join(
-            config.get("common", "directory"), tpath))
+    if watch_dir:
+        copyfile(
+            os.path.join("torrent", tpath),
+            os.path.join(watch_dir, tpath)
+            )
 
+def main():
+    # argparse
+    import argparse
 
-config = MyConfigParser()
-config.read(os.path.join(os.path.dirname(__file__), 'config.cfg'))
+    # argparse parser
+    parser = argparse.ArgumentParser(
+            description='Bring torrents from one Gazelle instance to another'
+    )
 
-parsedArgs = parseArguments(sys.argv)
+    parser.add_argument(
+        '-v', '--version',
+        action='version',
+        version='%(prog)s 5.0.4'
+    )
 
-# sprint(parsedArgs)
+    # --from <>
+    parser.add_argument(
+        '--from',
+        choices=trackers,
+        required=True,
+        dest='from_',
+        help="torrents from which Gazelle instance"
+    )
 
-if not ("tid" in parsedArgs):
-    if "link" in parsedArgs:
-        parsedArgs["gid"], parsedArgs["tid"] = parseLink(
-            parsedArgs["link"])
-    elif "tpath" in parsedArgs:
-        print("Tpath:", parsedArgs["tpath"])
-        parsedArgs["hash"] = getTorrentHash(parsedArgs["tpath"])
-    elif "tfolder" in parsedArgs:
-        pass
+    # -to <>
+    parser.add_argument(
+        "--to",
+        required=True,
+        help="sync to which Gazelle instance"
+    )
+
+    # --album <> / --folder <>
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument(
+        "--album",
+        help="the folder of the album"
+    )
+    group.add_argument(
+        "--folder",
+        help="the folder that contauins all albums. The album folder will be extracted from the site metadata"
+    )
+
+    # --tid <> / --link <> / --tpath <> / --tfolder <>
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument(
+        "--tid",
+        help="the torrent ID"
+    )
+    group.add_argument(
+        "--link",
+        help="the whole permalinlk. The tool os smart enough to extract it"
+    )
+    group.add_argument(
+        "--tpath",
+        help="the path that points towards the .torrent file. The infohash will be computed"
+    )
+    group.add_argument(
+        "--tfolder",
+        help="the folder containing all the .torrent files"
+    )
+
+    parser.add_argument(
+            '-c', '--config',
+            metavar='FILE',
+            default=os.path.join(os.path.dirname(__file__), 'config.cfg'),
+            help='config file with login details (default: %(default)s)'
+    )
+
+    # print help message when no option is given
+    if len(sys.argv) == 1:
+        parser.print_help()
+        parser.exit()
+
+    # parse arguments
+    args = parser.parse_args()
+    config_file = args.config
+    gazelle_from = args.from_
+    gazelle_to = args.to
+
+    album = args.album
+    folder = args.folder
+
+    tid = args.tid
+    link = args.link
+    tpath = args.tpath
+    tfolder = args.tfolder
+
+    # read config file
+    config = MyConfigParser()
+    config.read(config_file)
+
+    from_username = config.get(gazelle_from, 'username')
+    from_password = config.get(gazelle_from, 'password')
+    to_username = config.get(gazelle_to, 'username')
+    to_password = config.get(gazelle_to, 'password')
+    watch_dir = config.get("common", "watch_dir")
+    
+    sourceAPI = generateSourceTrackerAPI(gazelle_from, from_username, from_password)
+    destAPI = generateDestinationTrackerAPI(gazelle_to, to_username, to_password)
+    source = generateSourceFlag(gazelle_to)
+
+    # TODO recover previous required data
+    parsedArgs = {
+        'from': gazelle_from,
+        'to': gazelle_to
+    }
+    if album:
+        parsedArgs['album'] = album
     else:
-        raise Exception(
-            "Houston, we do not have enough information to proceed. Chack your arguments.")
+        parsedArgs['folder'] = folder
+    if tid:
+        parsedArgs['tid'] = tid
+    elif link:
+        parsedArgs['link'] = link
+    elif tpath:
+        parsedArgs['tpath'] = tpath
+    else:
+        parsedArgs['tfolder'] = tfolder
 
-sourceAPI = generateSourceTrackerAPI(parsedArgs["from"])
+    if not ("tid" in parsedArgs):
+        if "link" in parsedArgs:
+            parsedArgs["gid"], parsedArgs["tid"] = parseLink(
+                parsedArgs["link"])
+        elif "tpath" in parsedArgs:
+            print("Tpath:", parsedArgs["tpath"])
+            parsedArgs["hash"] = getTorrentHash(parsedArgs["tpath"])
+        elif "tfolder" in parsedArgs:
+            pass
+        else:
+            raise Exception(
+                "Houston, we do not have enough information to proceed. Chack your arguments.")
 
-destAPI = generateDestinationTrackerAPI(parsedArgs["to"])
+    if tfolder:
+        sprint("Batch mode")
+        total = 0
+        fails = 0
+        for filename in os.listdir(tfolder):
+            if filename.endswith(".torrent"):
+                total += 1
+                try:
+                    localParsed = dict()
+                    for i in parsedArgs:
+                        localParsed[i] = parsedArgs[i]
+                    localParsed["tpath"] = os.path.join(
+                        localParsed["tfolder"], filename)
+                    localParsed["hash"] = getTorrentHash(localParsed["tpath"])
+                    sprint(localParsed)
+                    moveAlbum(localParsed, sourceAPI, destAPI, source)
+                except Exception as e:
+                    fails += 1
+                sprint("Success rate:", 1 - fails/total)
+        sprint("Success rate:", 1 - fails/total)
+    else:
+        sprint("Single mode")
+        moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir)
 
-source = generateSourceFlag(parsedArgs["to"])
-
-# sprint(parsedArgs)
-# print(sys.getdefaultencoding())
-
-# raw_input()
-
-if "tfolder" in parsedArgs:
-    sprint("Batch mode")
-    total = 0
-    fails = 0
-    for filename in os.listdir(parsedArgs["tfolder"]):
-        if filename.endswith(".torrent"):
-            total += 1
-            try:
-                localParsed = dict()
-                for i in parsedArgs:
-                    localParsed[i] = parsedArgs[i]
-                localParsed["tpath"] = os.path.join(
-                    localParsed["tfolder"], filename)
-                localParsed["hash"] = getTorrentHash(localParsed["tpath"])
-                sprint(localParsed)
-                moveAlbum(localParsed, sourceAPI, destAPI, source)
-            except Exception as e:
-                fails += 1
-            sprint("Success rate:", 1 - fails/total)
-    sprint("Success rate:", 1 - fails/total)
-else:
-    sprint("Single mode")
-    moveAlbum(parsedArgs, sourceAPI, destAPI, source)
+if __name__ == "__main__":
+    main()
