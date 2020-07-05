@@ -16,4 +16,4 @@ python_version = "3.7"
 
 [scripts]
 gui = "python gs-gui-en.py"
-cli = "python gs-cli.py from=red to=dic \"album=C:\\Users\\7-2-1303\\Desktop\\2013 - The Best Of Keane - Deluxe Edition (FLAC)\" \"link=https://redacted.ch/torrents.php?id=41037&torrentid=1012753\""
+cli = "python gs-cli.py --from red --to dic --album \"C:\\Users\\7-2-1303\\Desktop\\2013 - The Best Of Keane - Deluxe Edition (FLAC)\" --link \"https://redacted.ch/torrents.php?id=41037&torrentid=1012753\""
