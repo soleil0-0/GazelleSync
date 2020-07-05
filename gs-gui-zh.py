@@ -45,19 +45,19 @@ while True:
     event, values = window.Read()
     callMovePy = ''
     if event == '_goGo_':
-        callMovePy = move_cmd + ' from=' + \
-            values['_from_'] + ' to=' + values['_to_']
+        callMovePy = move_cmd + ' --from=' + \
+            values['_from_'].lower() + ' --to=' + values['_to_'].lower()
         if len(values['_permalink_']) > 0:
-            callMovePy += ' link="' + values['_permalink_'] + '"'
+            callMovePy += ' --link="' + values['_permalink_'] + '"'
         elif len(values['_torrentFile_']) > 0:
-            callMovePy += ' tpath="' + values['_torrentFile_'] + '"'
+            callMovePy += ' --tpath="' + values['_torrentFile_'] + '"'
         elif len(values['_torrentFolder_']) > 0:
-            callMovePy += ' tfolder="' + values['_torrentFolder_'] + '"'
+            callMovePy += ' --tfolder="' + values['_torrentFolder_'] + '"'
 
         if values['_singleOrBash_'] == '单种模式':
-            callMovePy += ' album="' + values['_musicFolder_'] + '"'
+            callMovePy += ' --album="' + values['_musicFolder_'] + '"'
         elif values['_singleOrBash_'] == '批量模式':
-            callMovePy += ' folder="' + values['_musicFolder_'] + '"'
+            callMovePy += ' --folder="' + values['_musicFolder_'] + '"'
         os.system(callMovePy)
     elif event is None or event == '_exit_':
         break
