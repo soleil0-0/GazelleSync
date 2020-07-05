@@ -27,7 +27,7 @@ class RequestException(Exception):
 	pass
 
 class XanaxAPI:
-	def __init__(self, username=None, password=None):
+	def __init__(self, username=None, password=None, cookie=None):
 		self.session = requests.Session()
 		self.session.headers.update(headers)
 		self.username = username
@@ -39,7 +39,24 @@ class XanaxAPI:
 		self.last_request = time.time()
 		self.rate_limit = 2.0 # seconds between requests
 		self.site = "APL"
-		self._login()
+		if cookie:
+			self.session.headers['cookie'] = cookie
+			try:
+				print("use cookie to invoke api")
+				self._auth()
+			except RequestException:
+				print("cookie invalid, login with password instead")
+				self._login()
+		else:
+			print("login with password")
+			self._login()
+
+	def _auth(self):
+		"""Gets auth key from server"""
+		accountinfo = self.request("index")
+		self.authkey = accountinfo['authkey']
+		self.passkey = accountinfo['passkey']
+		self.userid = accountinfo['id']
 
 	def _login(self):
 		'''Logs in user and gets authkey from server'''

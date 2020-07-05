@@ -193,35 +193,34 @@ def getTorrentHash(path):
     info = metainfo[b'info']
     return hashlib.sha1(bencode.bencode(info)).hexdigest().upper()
 
-
-def generateSourceTrackerAPI(tracker, username, password):
+def generateSourceTrackerAPI(tracker, username, password, cookie):
     if tracker == "red":
         print("Source tracker is RED")
-        return RedApi(username=username, password=password)
+        return RedApi(username=username, password=password, cookie=cookie)
     elif tracker == "ops":
         print("Source tracker is OPS")
-        return XanaxAPI(username=username, password=password)
+        return XanaxAPI(username=username, password=password, cookie=cookie)
     elif tracker == "nwcd":
         print("Source tracker is NWCD")
-        return NwAPI(username=username, password=password)
+        return NwAPI(username=username, password=password, cookie=cookie)
     elif tracker == "dic":
         print("Source tracker is DIC")
-        return DicAPI(username=username, password=password)
+        return DicAPI(username=username, password=password, cookie=cookie)
 
 
-def generateDestinationTrackerAPI(tracker, username, password):
+def generateDestinationTrackerAPI(tracker, username, password, cookie):
     if tracker == "red":
         print("Destination tracker is RED")
-        return WhatAPI(username=username, password=password, tracker="https://flacsfor.me/{0}/announce", url="https://redacted.ch/", site="RED")
+        return WhatAPI(username=username, password=password, cookie=cookie, tracker="https://flacsfor.me/{0}/announce", url="https://redacted.ch/", site="RED")
     elif tracker == "ops":
         print("Destination tracker is OPS")
-        return WhatAPI(username=username, password=password, tracker="https://home.opsfet.ch/{0}/announce", url="https://orpheus.network/", site="OPS")
+        return WhatAPI(username=username, password=password, cookie=cookie, tracker="https://home.opsfet.ch/{0}/announce", url="https://orpheus.network/", site="OPS")
     elif tracker == "nwcd":
         print("Destination tracker is NWCD")
-        return WhatAPI(username=username, password=password, tracker="https://definitely.notwhat.cd:443/{0}/announce", url="https://notwhat.cd/", site="NWCD")
+        return WhatAPI(username=username, password=password, cookie=cookie, tracker="https://definitely.notwhat.cd:443/{0}/announce", url="https://notwhat.cd/", site="NWCD")
     elif tracker == "dic":
         print("Destination tracker is DIC")
-        return WhatAPI(username=username, password=password, tracker="https://tracker.dicmusic.club/{0}/announce", url="https://dicmusic.club/", site="DIC")
+        return WhatAPI(username=username, password=password, cookie=cookie, tracker="https://tracker.dicmusic.club/{0}/announce", url="https://dicmusic.club/", site="DIC")
 
 
 def generateSourceFlag(tracker):
@@ -643,18 +642,25 @@ def main():
     tpath = args.tpath
     tfolder = args.tfolder
 
+    # TODO [validation] gazelle_from and gazelle_to should not the same
+    if gazelle_from == gazelle_to:
+        print("Values of \"--from\" and \"--to\" should not be the same")
+        exit(1)
+
     # read config file
     config = MyConfigParser()
     config.read(config_file)
 
     from_username = config.get(gazelle_from, 'username')
     from_password = config.get(gazelle_from, 'password')
+    from_cookie = config.get(gazelle_from, 'cookie')
     to_username = config.get(gazelle_to, 'username')
     to_password = config.get(gazelle_to, 'password')
+    to_cookie = config.get(gazelle_to, 'cookie')
     watch_dir = config.get("common", "watch_dir")
     
-    sourceAPI = generateSourceTrackerAPI(gazelle_from, from_username, from_password)
-    destAPI = generateDestinationTrackerAPI(gazelle_to, to_username, to_password)
+    sourceAPI = generateSourceTrackerAPI(gazelle_from, from_username, from_password, from_cookie)
+    destAPI = generateDestinationTrackerAPI(gazelle_to, to_username, to_password, to_cookie)
     source = generateSourceFlag(gazelle_to)
 
     # TODO recover previous required data

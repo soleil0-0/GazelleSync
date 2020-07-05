@@ -22,7 +22,7 @@ class RequestException(Exception):
 	pass
 
 class RedApi:
-	def __init__(self, username=None, password=None):
+	def __init__(self, username=None, password=None, cookie=None):
 		self.session = requests.Session()
 		self.session.headers.update(headers)
 		self.session.headers['User-Agent'] += ' [{}]'.format(username)
@@ -37,7 +37,17 @@ class RedApi:
 		self.rate_limit_max = 5
 		self._rate_limit_table = []
 		self.site = "RED"
-		self._login()
+		if cookie:
+			self.session.headers['cookie'] = cookie
+			try:
+				print("use cookie to invoke api")
+				self._auth()
+			except RequestException:
+				print("cookie invalid, login with password instead")
+				self._login()
+		else:
+			print("login with password")
+			self._login()
 
 	def _rate_limit(self):
 		"""This method is blocking"""
@@ -56,6 +66,13 @@ class RedApi:
 			lambda x: x + self.rate_limit_cool_down > time.time(),
 			self._rate_limit_table
 		))
+
+	def _auth(self):
+		"""Gets auth key from server"""
+		accountinfo = self.request("index")
+		self.authkey = accountinfo['authkey']
+		self.passkey = accountinfo['passkey']
+		self.userid = accountinfo['id']
 
 	def _login(self):
 		"""Logs in user and gets authkey from server"""

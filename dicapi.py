@@ -24,7 +24,7 @@ class RequestException(Exception):
 	pass
 
 class DicAPI:
-	def __init__(self, username=None, password=None):
+	def __init__(self, username=None, password=None, cookie=None):
 		self.session = requests.Session()
 		self.session.headers.update(headers)
 		self.session.headers['User-Agent'] += ' [{}]'.format(username)
@@ -39,7 +39,24 @@ class DicAPI:
 		self.rate_limit_max = 5
 		self._rate_limit_table = []
 		self.site = "DIC"
-		self._login()
+		if cookie:
+			self.session.headers['cookie'] = cookie
+			try:
+				print("use cookie to invoke api")
+				self._auth()
+			except RequestException:
+				print("cookie invalid, login with password instead")
+				self._login()
+		else:
+			print("login with password")
+			self._login()
+
+	def _auth(self):
+		"""Gets auth key from server"""
+		accountinfo = self.request("index")
+		self.authkey = accountinfo['authkey']
+		self.passkey = accountinfo['passkey']
+		self.userid = accountinfo['id']
 
 	def _rate_limit(self):
 		"""This method is blocking"""
