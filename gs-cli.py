@@ -179,8 +179,8 @@ def parseArguments(args):
 
 
 def parseLink(link):
-    ids = re.findall("id=(\d+)&torrentid=(\d+)", link)
-    return ids[0][0], ids[0][1]
+    ids = re.findall("torrentid=(\d+)", link)
+    return ids[0]
 
 
 def getTorrentHash(path):
@@ -683,8 +683,7 @@ def main():
 
     if not ("tid" in parsedArgs):
         if "link" in parsedArgs:
-            parsedArgs["gid"], parsedArgs["tid"] = parseLink(
-                parsedArgs["link"])
+            parsedArgs["tid"] = parseLink(parsedArgs["link"])
         elif "tpath" in parsedArgs:
             print("Tpath:", parsedArgs["tpath"])
             parsedArgs["hash"] = getTorrentHash(parsedArgs["tpath"])
