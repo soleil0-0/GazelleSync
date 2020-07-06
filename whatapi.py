@@ -112,7 +112,6 @@ class WhatAPI:
 		self.url = url
 		self.site = site
 		self.api = "WCD"
-		self._login(tracker)
 		if cookie:
 			self.session.headers['cookie'] = cookie
 			try:
