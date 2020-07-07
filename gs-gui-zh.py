@@ -1,6 +1,16 @@
 #!/usr/bin/env Python3
 import PySimpleGUI as sg
 import os
+import sys
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 def is_exe(fpath):
     return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
@@ -20,7 +30,7 @@ layout = [
     [sg.Text('方法一：使用来源站点的种子永久链接（PL）', font=("Microsoft YaHei", 13))],
     [sg.InputText(key='_permalink_')],
     [sg.Text('来源站点的种子永久链接可能存在以下三种形式：', font=("Microsoft YaHei", 10))],
-    [sg.Text('https://source.tracker/torrents.php?torrentid=1', font=("Helvetica", 8))],
+    [sg.Text('https://source.tracker/torrents.php?torrentid=1', font=("Microsoft YaHei", 10))],
     [sg.Text('https://source.tracker/torrents.php?id=1&torrentid=1#torrent1', font=("Microsoft YaHei", 10))],
     [sg.Text('https://source.tracker/torrents.php?id=1&torrentid=1', font=("Microsoft YaHei", 10))],
     [sg.Text('方法二：使用来源站点的种子文件', font=("Microsoft YaHei", 13))],
@@ -37,7 +47,7 @@ layout = [
 
 
 window = sg.Window('Gazelle -> Gazelle (5.0)', layout,
-                   default_element_size=(40, 1), grab_anywhere=False, icon="favicon.ico")
+                   default_element_size=(40, 1), grab_anywhere=False, icon=resource_path("favicon.ico"))
 
 event, values = window.Read()
 

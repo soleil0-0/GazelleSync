@@ -1,6 +1,16 @@
 #!/usr/bin/env Python3
 import PySimpleGUI as sg
 import os
+import sys
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 def is_exe(fpath):
     return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
@@ -36,7 +46,7 @@ layout = [
 ]
 
 
-window = sg.Window('Gazelle -> Gazelle (5.0)', layout, default_element_size=(40, 1), grab_anywhere=False, icon="favicon.ico")
+window = sg.Window('Gazelle -> Gazelle (5.0)', layout, default_element_size=(40, 1), grab_anywhere=False, icon=resource_path("favicon.ico"))
 event, values = window.Read()
 
 while True:
