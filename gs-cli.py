@@ -11,6 +11,7 @@ import time
 import html
 from html.parser import HTMLParser
 import configparser
+import logging
 
 # imports: third party
 import requests
@@ -25,8 +26,9 @@ from dicapi import DicAPI
 from shutil import copyfile
 import bencode
 
+# contants
 __version__ = "5.0.4"
-#sys.stdout = open('out.txt', 'w')
+LOG_FILE = 'gs.log'
 
 class MyConfigParser(configparser.RawConfigParser):
     def get(self, section, option):
@@ -569,6 +571,13 @@ def main():
         action='version',
         version='%(prog)s 5.0.4'
     )
+    parser.add_argument(
+            '-l', '--loglevel',
+            metavar='LOGLEVEL',
+            default='info',
+            choices=['debug', 'info', 'warning', 'error', 'critical'],
+            help='loglevel for log file (default: %(default)s)'
+    )
 
     # --from <>
     parser.add_argument(
@@ -631,6 +640,9 @@ def main():
 
     # parse arguments
     args = parser.parse_args()
+
+    loglevel = args.loglevel
+
     config_file = args.config
     gazelle_from = args.from_
     gazelle_to = args.to
@@ -643,9 +655,19 @@ def main():
     tpath = args.tpath
     tfolder = args.tfolder
 
+    # set up logging
+    numeric_level = getattr(logging, loglevel.upper(), None)
+    if not isinstance(numeric_level, int):
+        raise ValueError('Invalid log level: %s' % loglevel)
+    logging.basicConfig(
+            format='%(asctime)s %(levelname)s:%(message)s',
+            handlers=[logging.FileHandler(LOG_FILE), logging.StreamHandler()],
+            level=numeric_level
+    )
+
     # TODO [validation] gazelle_from and gazelle_to should not the same
     if gazelle_from == gazelle_to:
-        print("Values of \"--from\" and \"--to\" should not be the same")
+        logging.error("Values of \"--from\" and \"--to\" should not be the same")
         exit(1)
 
     # read config file
