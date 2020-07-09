@@ -24,6 +24,7 @@ import subprocess
 import sys
 import tarfile
 import time
+import logging
 
 import chardet
 import pkg_resources
@@ -1232,14 +1233,14 @@ def run_profiled(func, *args, **kwargs):
             if output_file:
                 profiler.dump_stats(output_file)
                 log.info('Profile stats saved to %s', output_file)
-                print('Profile stats saved to %s' % output_file)
+                logging.info('Profile stats saved to %s' % output_file)
             else:
                 import pstats
                 from io import StringIO
                 strio = StringIO()
                 ps = pstats.Stats(profiler, stream=strio).sort_stats('cumulative')
                 ps.print_stats()
-                print(strio.getvalue())
+                logging.info(strio.getvalue())
 
         try:
             return profiler.runcall(func, *args)

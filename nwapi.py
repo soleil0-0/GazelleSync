@@ -1,7 +1,14 @@
+#!/usr/bin/env python3
+# -*-coding=utf-8 -*-
+
+# imports: standard
 import re
 import os
 import json
 import time
+import logging
+
+# imports: third party
 import requests
 
 headers = {
@@ -41,13 +48,14 @@ class NwAPI:
 		if cookie:
 			self.session.headers['cookie'] = cookie
 			try:
-				print("use cookie to invoke api")
+				logging.info("use cookie to invoke api")
 				self._auth()
 			except RequestException:
-				print("cookie invalid, login with password instead")
+				logging.info("cookie invalid, login with password instead")
+				del self.session.headers['cookie']
 				self._login()
 		else:
-			print("login with password")
+			logging.info("login with password")
 			self._login()
 
 	def _auth(self):
@@ -70,8 +78,7 @@ class NwAPI:
 		self.passkey = accountinfo['passkey']
 		self.userid = accountinfo['id']
 		self.userclass = accountinfo['userstats']['class']
-		print("Logged in")
-		#input()
+		logging.info("Logged in")
 
 	def logout(self):
 		self.session.get("https://notwhat.cd/logout.php?auth=%s" % self.authkey)

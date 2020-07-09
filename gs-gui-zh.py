@@ -22,7 +22,7 @@ if is_exe("gs-cli.exe") or is_exe("gs-cli"):
 sg.ChangeLookAndFeel('DarkBlue')
 
 layout = [
-    [sg.Text('GazelleSync 5.0.4 - DIC Variant', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
+    [sg.Text('GazelleSync 5.0.5 - DIC Variant', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
     [sg.Text('(注意：首先，你需要编辑 config.cfg，在其中添加所有相关站点的用户名和密码。)', font=("Microsoft YaHei", 10))],
     [sg.Text('(注意：本 .py 文件应与其他 .py 文件处于同一目录下。)', font=("Microsoft YaHei", 10))],
     [sg.Text('从：', font=("Times", 15)), sg.InputCombo(('OPS', 'RED', 'NWCD', 'DIC'), key='_from_', default_value='none'), sg.Text('到：', font=("Times", 15)), sg.InputCombo(('OPS', 'RED', 'NWCD', 'DIC'), key='_to_', default_value='none')],

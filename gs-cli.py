@@ -27,7 +27,7 @@ from shutil import copyfile
 import bencode
 
 # contants
-__version__ = "5.0.4"
+__version__ = "5.0.5"
 LOG_FILE = 'gs.log'
 
 class MyConfigParser(configparser.RawConfigParser):
@@ -85,26 +85,6 @@ def toUnicode(inp):
     else:
         return unicode(inp, sys.getfilesystemencoding())
 
-
-def sprint(*r):
-    try:
-        print(*r)
-    except:
-        try:
-            b = list()
-            for i in r:
-                try:
-                    if isinstance(i, unicode):
-                        b.append(i.encode(sys.getfilesystemencoding()))
-                    else:
-                        b.append(str(i))
-                except Exception as e:
-                    b.append("Failed to encode!")
-            print(*b)
-        except:
-            print("Failed to encode!")
-
-
 compulsory = {
     "from",
     "to",
@@ -133,52 +113,10 @@ def validateTrackers(result):
     result["to"] = result["to"].lower()
     result["from"] = result["from"].lower()
 
-    #print(result["to"], result["from"])
-
     if result["to"] == result["from"]:
         return False
 
     return (result["to"] in trackers) and (result["from"] in trackers)
-
-
-def parseArguments(args):
-    comp = dict()
-    for c in compulsory:
-        comp[c] = False
-
-    result = dict()
-    sprint("======================")
-    for a in args:
-        sprint(a)
-        sprint("+++")
-        for p in possible:
-            if a.startswith(p):
-                result[p] = a[len(p)+1:]
-                #sprint("Matched at", p, result[p])
-
-    for k in result:
-        if k in comp:
-            comp[k] = True
-
-    allTrue = True
-    for c in comp:
-        allTrue = allTrue and comp[c]
-    #sprint("All true", allTrue)
-    if not allTrue:
-        print("The following arguments are compulsory")
-        for c in compulsory:
-            sprint(c)
-        raise Exception('Not all arguments are present.')
-
-    if not validateTrackers(result):
-        raise Exception("Trackers can only be RED, OPS, NWCD, and DIC")
-
-    if ("tid" in result):
-        if not int(result["tid"]):
-            raise("gid argument has to be a number")
-
-    return result
-
 
 def parseLink(link):
     ids = re.findall("torrentid=(\d+)", link)
@@ -186,42 +124,43 @@ def parseLink(link):
 
 
 def getTorrentHash(path):
-    print(path)
+    logging.info(path)
     torrent_file = open(path, "rb")
     metainfo = bencode.bdecode(torrent_file.read())
-    print("Keys")
-    for i in metainfo:
-        print(i)
+
+    logging.info("Keys")
+    logging.info(str(metainfo))
+
     info = metainfo[b'info']
     return hashlib.sha1(bencode.bencode(info)).hexdigest().upper()
 
 def generateSourceTrackerAPI(tracker, username, password, cookie):
     if tracker == "red":
-        print("Source tracker is RED")
+        logging.info("Source tracker is RED")
         return RedApi(username=username, password=password, cookie=cookie)
     elif tracker == "ops":
-        print("Source tracker is OPS")
+        logging.info("Source tracker is OPS")
         return XanaxAPI(username=username, password=password, cookie=cookie)
     elif tracker == "nwcd":
-        print("Source tracker is NWCD")
+        logging.info("Source tracker is NWCD")
         return NwAPI(username=username, password=password, cookie=cookie)
     elif tracker == "dic":
-        print("Source tracker is DIC")
+        logging.info("Source tracker is DIC")
         return DicAPI(username=username, password=password, cookie=cookie)
 
 
 def generateDestinationTrackerAPI(tracker, username, password, cookie):
     if tracker == "red":
-        print("Destination tracker is RED")
+        logging.info("Destination tracker is RED")
         return WhatAPI(username=username, password=password, cookie=cookie, tracker="https://flacsfor.me/{0}/announce", url="https://redacted.ch/", site="RED")
     elif tracker == "ops":
-        print("Destination tracker is OPS")
+        logging.info("Destination tracker is OPS")
         return WhatAPI(username=username, password=password, cookie=cookie, tracker="https://home.opsfet.ch/{0}/announce", url="https://orpheus.network/", site="OPS")
     elif tracker == "nwcd":
-        print("Destination tracker is NWCD")
+        logging.info("Destination tracker is NWCD")
         return WhatAPI(username=username, password=password, cookie=cookie, tracker="https://definitely.notwhat.cd:443/{0}/announce", url="https://notwhat.cd/", site="NWCD")
     elif tracker == "dic":
-        print("Destination tracker is DIC")
+        logging.info("Destination tracker is DIC")
         return WhatAPI(username=username, password=password, cookie=cookie, tracker="https://tracker.dicmusic.club/{0}/announce", url="https://dicmusic.club/", site="DIC")
 
 
@@ -259,14 +198,16 @@ def getReleases(tracker, response, artist_name, group_name):
             if len(group["groupName"]) == l:
                 ret.append(group)
     rett = list()
+    logging.info(ret)
     for album in ret:
-        for t in album["torrents"]:
-            rett.append(t)
+        if "torrents" in album:
+            for t in album["torrents"]:
+                rett.append(t)
     return rett
 
 
 def isSame(first, second, what):
-    sprint(what, first[what], second[what], first[what] == second[what])
+    logging.info(str((what, first[what], second[what], first[what] == second[what])))
     return first[what] == second[what]
 
 
@@ -320,11 +261,10 @@ def checkForDuplicate(tracker, meta):
     f.close()
 
     isDupe = False
-    sprint("Comparing")
+    logging.info("Comparing")
     filteredResults = dict()
     for artist in results:
         filteredResults[artist] = filterResults(meta, results[artist])
-        # sprint(len(filteredResults[artist]))
         if len(filteredResults[artist]) > 0:
             isDupe = True
 
@@ -336,8 +276,8 @@ def checkForDuplicate(tracker, meta):
 
 def genaratePrettyName(artists, name, year, format, bitrate, media, recordLabel, catalogueNumber, editionTitle):
     artistString = ""
-    print("Artists")
-    print(artists)
+    logging.info("Artists")
+    logging.info(artists)
     if len(artists["artists"]) == 1:
         artistString = artists["artists"][0]["name"]
     if len(artists["artists"]) == 2:
@@ -385,11 +325,11 @@ artistImportances = {
 
 
 def moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir):
-    sprint(parsedArgs)
+    logging.info(str(parsedArgs))
     data = None
 
     if "hash" in parsedArgs:
-        sprint(parsedArgs["hash"], len(parsedArgs["hash"]))
+        logging.info(parsedArgs["hash"] + " " + len(parsedArgs["hash"]))
         data = sourceAPI.get_torrent_info(hash=parsedArgs["hash"])
     else:
         TorrentIDsource = parsedArgs["tid"]
@@ -415,13 +355,13 @@ def moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir):
     elif "folder" in parsedArgs:
         folder = os.path.join(
             parsedArgs["folder"], unescape(tdata["filePath"]))
-        sprint("Folder:", folder, "====")
+        logging.info("Folder:", folder, "====")
     else:
         raise Exception("Failed to find path")
 
     isDupe = checkForDuplicate(destAPI, data)
 
-    sprint("Duplicate:", isDupe)
+    logging.info("Duplicate: %s" % isDupe)
 
     if isDupe:
         return
@@ -502,7 +442,7 @@ def moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir):
     for i, v in enumerate(g_artists["producer"]):
         artists.append((v["name"], artistImportances.get("Producer", 1)))
 
-    sprint(album["album"])
+    logging.info(str(album["album"]))
 
     tempfolder = "torrent"
 
@@ -521,7 +461,7 @@ def moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir):
     newFolderName = genaratePrettyName(g_artists, g_name, releaseYear, t_format,
                                        t_encoding, t_media, releaseRecordLabel, releaseCatNum, t_remasterTitle)
 
-    print("New path is", newFolderName)
+    logging.info("New path is %s" % newFolderName)
     # input()
 
     tpath = newFolderName + ".torrent"
@@ -533,11 +473,11 @@ def moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir):
 
     #tpath = "torrent/"+tpath
 
-    sprint(tpath)
-    sprint("Folder", folder)
+    logging.info(tpath)
+    logging.info("Folder " + folder)
     #folder = toUnicode(folder)
 
-    sprint("Folder", folder)
+    logging.info("Folder " + folder)
     # raw_input()
 
     t = maketorrent.TorrentMetadata()
@@ -569,7 +509,7 @@ def main():
     parser.add_argument(
         '-v', '--version',
         action='version',
-        version='%(prog)s 5.0.4'
+        version='%(prog)s 5.0.5'
     )
     parser.add_argument(
             '-l', '--loglevel',
@@ -708,7 +648,7 @@ def main():
         if "link" in parsedArgs:
             parsedArgs["tid"] = parseLink(parsedArgs["link"])
         elif "tpath" in parsedArgs:
-            print("Tpath:", parsedArgs["tpath"])
+            logging.info("Tpath:", parsedArgs["tpath"])
             parsedArgs["hash"] = getTorrentHash(parsedArgs["tpath"])
         elif "tfolder" in parsedArgs:
             pass
@@ -717,7 +657,7 @@ def main():
                 "Houston, we do not have enough information to proceed. Chack your arguments.")
 
     if tfolder:
-        sprint("Batch mode")
+        logging.info("Batch mode")
         total = 0
         fails = 0
         for filename in os.listdir(tfolder):
@@ -730,14 +670,14 @@ def main():
                     localParsed["tpath"] = os.path.join(
                         localParsed["tfolder"], filename)
                     localParsed["hash"] = getTorrentHash(localParsed["tpath"])
-                    sprint(localParsed)
+                    logging.info(str(localParsed))
                     moveAlbum(localParsed, sourceAPI, destAPI, source)
                 except Exception as e:
                     fails += 1
-                sprint("Success rate:", 1 - fails/total)
-        sprint("Success rate:", 1 - fails/total)
+                logging.info("Success rate: %s".format(1 - fails/total))
+        logging.info("Success rate: %s".format(1 - fails/total))
     else:
-        sprint("Single mode")
+        logging.info("Single mode")
         moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir)
 
 if __name__ == "__main__":
