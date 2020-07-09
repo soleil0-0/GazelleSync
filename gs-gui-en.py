@@ -22,7 +22,7 @@ if is_exe("gs-cli.exe") or is_exe("gs-cli"):
 sg.ChangeLookAndFeel('DarkBlue')
 
 layout = [
-    [sg.Text('GazelleSync 5.0.4 - DIC Variant', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
+    [sg.Text('GazelleSync 5.0.5 - DIC Variant', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
     [sg.Text('(Note: You should edit config.cfg first, to include usernames and passwords of all relevant trackers)', font=("Helvetica", 8))],
     [sg.Text('(Note: This .py should be in the same directory as the other .py files)', font=( "Helvetica", 8))],
     [sg.Text('From: ', font=("Helvetica", 15)), sg.InputCombo(('OPS', 'RED', 'NWCD', 'DIC'), key='_from_', default_value='none'), sg.Text('To :', font=("Helvetica", 15)), sg.InputCombo(('OPS', 'RED', 'NWCD', 'DIC'), key='_to_', default_value='none')],

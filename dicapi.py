@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
+# -*-coding=utf-8 -*-
+
+# imports: standard
 import re
 import os
 import json
 import time
+import logging
+
+# imports: third party
 import requests
 
 headers = {
@@ -42,13 +48,14 @@ class DicAPI:
 		if cookie:
 			self.session.headers['cookie'] = cookie
 			try:
-				print("use cookie to invoke api")
+				logging.info("use cookie to invoke api")
 				self._auth()
 			except RequestException:
-				print("cookie invalid, login with password instead")
+				logging.info("cookie invalid, login with password instead")
+				del self.session.headers['cookie']
 				self._login()
 		else:
-			print("login with password")
+			logging.info("login with password")
 			self._login()
 
 	def _auth(self):
@@ -105,7 +112,7 @@ class DicAPI:
 		self.last_request = time.time()
 		try:
 			parsed = json.loads(r.content.decode())
-			print(parsed["status"])
+			logging.info(parsed["status"])
 			if parsed['status'] != 'success':
 				raise RequestException
 			return parsed['response']
@@ -116,7 +123,6 @@ class DicAPI:
 		self._rate_limit()
 
 		ajaxpage = 'https://dicmusic.club/' + action
-		#print "Requesting", ajaxpage
 		if self.authkey:
 			kwargs['auth'] = self.authkey
 		r = self.session.get(ajaxpage, params=kwargs, allow_redirects=False)

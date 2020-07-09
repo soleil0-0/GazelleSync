@@ -1,12 +1,18 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+# -*-coding=utf-8 -*-
+
+# imports: standard
 import re
 import os
 import sys
 import time
 import string
-import requests
 import subprocess
 import shutil
+import logging
+
+# imports: third party
+import requests
 
 headers = {
 	'Connection': 'keep-alive',
@@ -19,7 +25,7 @@ headers = {
 
 def create_upload_request(auth, album, torrent, logfiles, tags, artwork_url, artists):
 	if album["remaster"]:
-		print("Is a remaster")
+		logging.info("Is a remaster")
 		data = [
 			("submit", "true"),  # the submit button
 			("auth", auth),  # input name=auth on upload page - appears to not change
@@ -45,7 +51,7 @@ def create_upload_request(auth, album, torrent, logfiles, tags, artwork_url, art
 			("release_desc", album["rDesc"])
 		]
 	else:
-		print("Is not a remaster")
+		logging.info("Is not a remaster")
 		data = [
 			("submit", "true"),  # the submit button
 			("auth", auth),  # input name=auth on upload page - appears to not change
@@ -65,7 +71,7 @@ def create_upload_request(auth, album, torrent, logfiles, tags, artwork_url, art
 			("album_desc", album["description"]),
 			("release_desc", album["rDesc"])
 		]
-	print(data[4])
+	logging.info(data[4])
 	for artist in artists:
 		data.append(("artists[]", artist[0]))
 		data.append(("importance[]", artist[1]))
@@ -112,16 +118,18 @@ class WhatAPI:
 		self.url = url
 		self.site = site
 		self.api = "WCD"
+		self.tracker = tracker
 		if cookie:
 			self.session.headers['cookie'] = cookie
 			try:
-				print("use cookie to invoke api")
+				logging.info("use cookie to invoke api")
 				self._auth()
 			except RequestException:
-				print("cookie invalid, login with password instead")
+				logging.info("cookie invalid, login with password instead")
+				del self.session.headers['cookie']
 				self._login(tracker)
 		else:
-			print("login with password")
+			logging.info("login with password")
 			self._login(tracker)
 
 	def _auth(self):
@@ -147,8 +155,8 @@ class WhatAPI:
 			self.tracker = tracker.format(self.passkey)
 		except Exception as e:
 			raise e
-			print("unable to log in")
-			print(r.text)
+			logging.info("unable to log in")
+			logging.info(r.text)
 			sys.exit(1)
 
 	def logout(self):
@@ -172,8 +180,6 @@ class WhatAPI:
 		return response['response']
 
 	def upload(self, album_dir, output_dir, album, tags, artwork_url, artists, torrentpath):
-		#print("Uploading")
-		#input()
 		url = self.url + "/upload.php"
 		torrent = ('torrent.torrent', open(torrentpath, 'rb'), "application/octet-stream")
 		logfiles = locate(album_dir, ext_matcher('.log'))
@@ -184,10 +190,10 @@ class WhatAPI:
 		upload_headers = dict(headers)
 		upload_headers["referer"] = url
 		upload_headers["origin"] = url.rsplit("/", 1)[0]
-		print(album["album"])
+		logging.info(album["album"])
 		r = self.session.post(url, data=data, files=files, headers=upload_headers)
 		if "torrent_comments" not in r.text:
-			print("upload failed.")
+			logging.info("upload failed.")
 			f = open("ret.html", "wb")
 			f.write(r.text.encode("utf-8"))
 			f.close()
@@ -207,7 +213,6 @@ class WhatAPI:
 
 	def img(self, url):
 		r = self.session.put(self.url + "imgupload.php", data=url)
-		#print(r.json())
 		return r.json()["url"]
 
 	def HTMLtoBBCODE(self, text):

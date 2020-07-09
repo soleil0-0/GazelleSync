@@ -12,6 +12,7 @@ from __future__ import division, unicode_literals, print_function
 import os
 import sys
 from hashlib import sha1 as sha
+import logging
 
 from bencode import bencode
 
@@ -184,7 +185,7 @@ class TorrentMetadata(object):
 			for (dirpath, dirnames, filenames) in os.walk(self.data_path):
 				for index, filename in enumerate(filenames):
 					if filename in self.skip or filename.endswith(".torrent") or filename.endswith(".json") or filename.endswith(".ini") or filename.endswith(".ico"):
-						print("Skipped", filename)
+						logging.info("Skipped " + filename)
 					else:
 						size = get_path_size(os.path.join(self.data_path, dirpath, filename))
 						p = dirpath[len(self.data_path):]
@@ -213,7 +214,7 @@ class TorrentMetadata(object):
 			# Create the piece hashes
 			buf = b''
 			for size, path in files:
-				print(path)
+				logging.info(path)
 				path = [removeit(s) for s in path]
 				#path = [removeit(s.decode(sys.getfilesystemencoding()).encode('UTF-8')) for s in path]
 				fs.append({'length': size, 'path': path})

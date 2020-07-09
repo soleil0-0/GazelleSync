@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
+# -*-coding=utf-8 -*-
+
+# imports: standard
 import re
 import os
 import json
 import time
+import logging
+
+# imports: third party
 import requests
 
 headers = {
@@ -40,13 +46,14 @@ class RedApi:
 		if cookie:
 			self.session.headers['cookie'] = cookie
 			try:
-				print("use cookie to invoke api")
+				logging.info("use cookie to invoke api")
 				self._auth()
 			except RequestException:
-				print("cookie invalid, login with password instead")
+				logging.info("cookie invalid, login with password instead")
+				del self.session.headers['cookie']
 				self._login()
 		else:
-			print("login with password")
+			logging.info("login with password")
 			self._login()
 
 	def _rate_limit(self):
@@ -78,18 +85,14 @@ class RedApi:
 		"""Logs in user and gets authkey from server"""
 		loginpage = 'https://redacted.ch/login.php'
 		data = {'username': self.username,
-				'password': self.password}
-		# TODO if proxy setting exist in system, it will cause:
-		#   requests.exceptions.ProxyError: HTTPSConnectionPool(host='redacted.ch', port=443): 
-		#     Max retries exceeded with url: /ajax.php?action=index (Caused by ProxyError('Cannot connect to proxy.',
-		#     RemoteDisconnected('Remote end closed connection without response')))
-		r = self.session.post(loginpage, data=data)
-		if r.status_code != 200:
+                'password': self.password,
+                'keeplogged': 1,
+                'login': 'Login'
+        }
+		r = self.session.post(loginpage, data=data, allow_redirects=False)
+		if r.status_code != 302:
 			raise LoginException
-		accountinfo = self.request('index')
-		self.authkey = accountinfo['authkey']
-		self.passkey = accountinfo['passkey']
-		self.userid = accountinfo['id']
+		self._auth()
 
 	def logout(self):
 		self.session.get("https://redacted.ch/logout.php?auth=%s" % self.authkey)
@@ -105,13 +108,11 @@ class RedApi:
 		params.update(kwargs)
 		r = self.session.get(ajaxpage, params=params, allow_redirects=False)
 		self.last_request = time.time()
-		# TODO if login failed, r.content.decode will be empty
 		try:
-			parsed = json.loads(r.content.decode())
-			print(parsed["status"])
-			if parsed['status'] != 'success':
+			json_response = r.json()
+			if json_response["status"] != "success":
 				raise RequestException
-			return parsed['response']
+			return json_response["response"]
 		except ValueError:
 			raise RequestException
 
