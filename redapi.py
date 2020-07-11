@@ -89,7 +89,7 @@ class RedApi:
         }
 		r = self.session.post(loginpage, data=data)
 		if r.status_code != 200 or not r.url.endswith('index.php'):
-			raise LoginException("Login <%s> failed, username and password may be incorrect or login too frequency" % self.site)
+			raise LoginException("Login <%s> failed, username and password may be incorrect or login too frequency(only log in once per minute)" % self.site)
 		self._auth()
 
 	def logout(self):
