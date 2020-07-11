@@ -1,5 +1,11 @@
 # GazelleSync
 
+## Development
+
+```sh
+pipenv install --three --dev
+```
+
 ## Problems
 
 | 描述 | 原始信息                                                                                                                   |
