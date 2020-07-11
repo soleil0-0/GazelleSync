@@ -5,6 +5,7 @@ verify_ssl = false
 
 [dev-packages]
 pyinstaller = "*"
+pylint = "*"
 
 [packages]
 requests = "*"
