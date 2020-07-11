@@ -28,7 +28,6 @@ import bencode
 
 # contants
 __version__ = "5.0.5"
-LOG_FILE = 'gs.log'
 
 class MyConfigParser(configparser.RawConfigParser):
     def get(self, section, option):
@@ -601,7 +600,7 @@ def main():
         raise ValueError('Invalid log level: %s' % loglevel)
     logging.basicConfig(
             format='%(asctime)s %(levelname)s:%(message)s',
-            handlers=[logging.FileHandler(LOG_FILE), logging.StreamHandler()],
+            handlers=[logging.StreamHandler()],
             level=numeric_level
     )
 
