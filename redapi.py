@@ -85,13 +85,11 @@ class RedApi:
 		"""Logs in user and gets authkey from server"""
 		loginpage = 'https://redacted.ch/login.php'
 		data = {'username': self.username,
-                'password': self.password,
-                'keeplogged': 1,
-                'login': 'Login'
+                'password': self.password
         }
-		r = self.session.post(loginpage, data=data, allow_redirects=False)
-		if r.status_code != 302:
-			raise LoginException
+		r = self.session.post(loginpage, data=data)
+		if r.status_code != 200 or not r.url.endswith('index.php'):
+			raise LoginException("Login <%s> failed, username or password may be incorrect" % self.site)
 		self._auth()
 
 	def logout(self):

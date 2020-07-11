@@ -89,8 +89,8 @@ class DicAPI:
 		data = {'username': self.username,
 				'password': self.password}
 		r = self.session.post(loginpage, data=data)
-		if r.status_code != 200:
-			raise LoginException
+		if r.status_code != 200 or not r.url.endswith('index.php'):
+			raise LoginException("Login <%s> failed, username or password may be incorrect" % self.site)
 		accountinfo = self.request('index')
 		self.authkey = accountinfo['authkey']
 		self.passkey = accountinfo['passkey']
