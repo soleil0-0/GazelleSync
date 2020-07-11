@@ -279,7 +279,7 @@ def genaratePrettyName(artists, name, year, format, bitrate, media, recordLabel,
     logging.info(artists)
     if len(artists["artists"]) == 1:
         artistString = artists["artists"][0]["name"]
-    if len(artists["artists"]) == 2:
+    elif len(artists["artists"]) == 2:
         artistString = artists["artists"][0]["name"] + \
             " & " + artists["artists"][1]["name"]
     else:
