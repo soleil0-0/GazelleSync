@@ -193,13 +193,22 @@ class WhatAPI:
 		logging.info(album["album"])
 		r = self.session.post(url, data=data, files=files, headers=upload_headers)
 		if "torrent_comments" not in r.text:
-			logging.info("upload failed.")
+			logging.error("upload failed.")
+
+			self.errmsg(r.text)
+
 			f = open("ret.html", "wb")
 			f.write(r.text.encode("utf-8"))
 			f.close()
+
 			return False
 		else:
 			return True
+
+	def errmsg(self, text):
+		for line in text.splitlines():
+			if '<p style="color: red; text-align: center;">' in line:
+				logging.error(re.sub('<[^<]+?>', '', line).strip())
 
 	def release_url(self, group, torrent):
 		return self.url + "/torrents.php?id=%s&torrentid=%s#torrent%s" % (group['group']['id'], torrent['id'], torrent['id'])
