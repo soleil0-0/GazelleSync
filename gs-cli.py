@@ -28,6 +28,11 @@ import bencode
 
 # contants
 __version__ = "5.0.5"
+# determine if application is a script file or frozen exe
+if getattr(sys, 'frozen', False):
+    application_path = os.path.dirname(sys.executable)
+elif __file__:
+    application_path = os.path.dirname(__file__)
 
 class MyConfigParser(configparser.RawConfigParser):
     def get(self, section, option):
@@ -568,7 +573,7 @@ def main():
     parser.add_argument(
             '-c', '--config',
             metavar='FILE',
-            default=os.path.join(os.path.dirname(__file__), 'config.cfg'),
+            default=os.path.join(application_path, 'config.cfg'),
             help='config file with login details (default: %(default)s)'
     )
 

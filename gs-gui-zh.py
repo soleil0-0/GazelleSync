@@ -15,9 +15,14 @@ def resource_path(relative_path):
 def is_exe(fpath):
     return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
 
+# determine if application is a script file or frozen exe
+if getattr(sys, 'frozen', False):
+    application_path = os.path.dirname(sys.executable)
+elif __file__:
+    application_path = os.path.dirname(__file__)
 move_cmd = "python gs-cli.py"
-if is_exe("gs-cli.exe") or is_exe("gs-cli"):
-    move_cmd = os.path.join(".", "gs-cli")
+if is_exe(os.path.join(application_path, "gs-cli.exe")) or is_exe(os.path.join(application_path, "gs-cli")):
+    move_cmd = os.path.join(application_path, "gs-cli")
 
 sg.ChangeLookAndFeel('DarkBlue')
 
