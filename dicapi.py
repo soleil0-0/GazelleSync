@@ -48,10 +48,10 @@ class DicAPI:
 		if cookie:
 			self.session.headers['cookie'] = cookie
 			try:
-				logging.info("use cookie to invoke api")
+				logging.info("use cookie to invoke api of <%s>" % self.site)
 				self._auth()
 			except RequestException:
-				logging.info("cookie invalid, login with password instead")
+				logging.info("cookie invalid, login <%s> with password instead" % self.site)
 				del self.session.headers['cookie']
 				self._login()
 		else:
