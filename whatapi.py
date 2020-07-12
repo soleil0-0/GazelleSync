@@ -122,10 +122,10 @@ class WhatAPI:
 		if cookie:
 			self.session.headers['cookie'] = cookie
 			try:
-				logging.info("use cookie to invoke api")
+				logging.info("use cookie to invoke api of <%s>" % self.site)
 				self._auth()
 			except RequestException:
-				logging.info("cookie invalid, login with password instead")
+				logging.info("cookie invalid, login <%s> with password instead" % self.site)
 				del self.session.headers['cookie']
 				self._login(tracker)
 		else:
@@ -187,6 +187,7 @@ class WhatAPI:
 		r = self.session.get(url)
 		auth = re.search('name="auth" value="([^"]+)"', r.text).group(1)
 		data, files = create_upload_request(auth, album, torrent, logfiles, tags, artwork_url, artists)
+		logging.info(data)
 		upload_headers = dict(headers)
 		upload_headers["referer"] = url
 		upload_headers["origin"] = url.rsplit("/", 1)[0]
