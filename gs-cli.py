@@ -123,9 +123,11 @@ def validateTrackers(result):
     return (result["to"] in trackers) and (result["from"] in trackers)
 
 def parseLink(link):
-    ids = re.findall("torrentid=(\d+)", link)
-    return ids[0]
-
+    try:
+        ids = re.findall("torrentid=(\d+)", link)
+        return ids[0]
+    except IndexError:
+        raise Exception("can't find 'torrentid=(\\d+)' in PL link.")
 
 def getTorrentHash(path):
     logging.info(path)
