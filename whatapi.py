@@ -174,10 +174,13 @@ class WhatAPI:
 		params.update(kwargs)
 		r = self.session.get(ajaxpage, params=params, allow_redirects=False)
 		self.last_request = time.time()
-		response = r.json()
-		if response['status'] != 'success':
+		try:
+			json_response = r.json()
+			if json_response["status"] != "success":
+				raise RequestException
+			return json_response["response"]
+		except ValueError:
 			raise RequestException
-		return response['response']
 
 	def upload(self, album_dir, output_dir, album, tags, artwork_url, artists, torrentpath):
 		url = self.url + "/upload.php"
