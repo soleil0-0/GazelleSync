@@ -16,8 +16,8 @@ pysimplegui = "*"
 python_version = "3.7"
 
 [scripts]
-dev = "sh -c 'set -ex; cp -v config.cfg.spec config.cfg; find . -name \"*.py\" -print0 | xargs -0 -I% sed -i\"\" \"s#https://tracker.dicmusic.club#http://pt.kshare.club:34000#g;s#https://dicmusic.club#http://pt.kshare.club#g\" \"%\"'"
-dev_undo = "sh -c 'git checkout config.cfg; find . -name \"*.py\" -print0 | xargs -0 -I% sed -i\"\" \"s#http://pt.kshare.club:34000#https://tracker.dicmusic.club#g;s#http://pt.kshare.club#https://dicmusic.club#g\" \"%\"'"
+dev = "sh -c \"set -ex; cp -v config.cfg.spec config.cfg; find . -name '*.py' -print0 | xargs -0 -I% sed -i'.bak' -e 's#https://tracker.dicmusic.club#http://pt.kshare.club:34000#g;s#https://dicmusic.club#http://pt.kshare.club#g' '%'; rm *.bak;\""
+dev_undo = "sh -c \"git checkout config.cfg; find . -name '*.py' -print0 | xargs -0 -I% sed -i'.bak' -e 's#http://pt.kshare.club:34000#https://tracker.dicmusic.club#g;s#http://pt.kshare.club#https://dicmusic.club#g' '%'; rm *.bak;\""
 gui = "python gs-gui-en.py"
 cli = "python gs-cli.py --from red --to dic --album \"../2013 - The Best Of Keane - Deluxe Edition (FLAC)\" --link \"https://redacted.ch/torrents.php?torrentid=1012753\""
 build_osx = "sh -c 'set -ex; pipenv run pyinstaller -i favicon.icns -F gs-gui-en.py --add-data \"favicon.icns:.\"; pipenv run pyinstaller -i favicon.icns -F gs-gui-zh.py --add-data \"favicon.icns:.\"; pipenv run pyinstaller -i favicon.icns -F gs-cli.py; cp -f config.cfg dist/config.cfg; cd dist; zip -r gs_darwin_amd64.zip config.cfg gs-cli gs-gui-en gs-gui-zh'"
