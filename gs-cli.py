@@ -27,7 +27,7 @@ from shutil import copyfile
 import bencode
 
 # contants
-__version__ = "5.0.5"
+__version__ = "5.0.6"
 # determine if application is a script file or frozen exe
 if getattr(sys, 'frozen', False):
     application_path = os.path.dirname(sys.executable)
@@ -517,7 +517,7 @@ def main():
     parser.add_argument(
         '-v', '--version',
         action='version',
-        version='%(prog)s 5.0.5'
+        version='%(prog)s 5.0.6'
     )
     parser.add_argument(
             '-l', '--loglevel',
