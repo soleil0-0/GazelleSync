@@ -1,77 +1,132 @@
-#!/usr/bin/env Python3
-import PySimpleGUI as sg
-import os
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# imports: standard
+from __future__ import unicode_literals
+from __future__ import print_function
 import sys
+from time import sleep
+import os
+import subprocess
 
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-    return os.path.join(base_path, relative_path)
+# imports: third party
+from gooey import Gooey, GooeyParser
 
-def is_exe(fpath):
-    return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+# contants
+trackers = {
+    "red",
+    "ops",
+    "nwcd",
+    "dic",
+}
 
 # determine if application is a script file or frozen exe
 if getattr(sys, 'frozen', False):
-    application_path = os.path.dirname(sys.executable)
+    application_path = os.path.dirname(os.path.realpath(sys.executable))
 elif __file__:
-    application_path = os.path.dirname(__file__)
-move_cmd = "python gs-cli.py"
-if is_exe(os.path.join(application_path, "gs-cli.exe")) or is_exe(os.path.join(application_path, "gs-cli")):
-    move_cmd = os.path.join(application_path, "gs-cli")
+    application_path = os.path.dirname(os.path.realpath(__file__))
 
-sg.ChangeLookAndFeel('DarkBlue')
+@Gooey(optional_cols=2,
+       default_size=(610, 740),
+       show_success_modal=False,
+       show_failure_modal=False,
+       program_name="GazelleSync GUI")
+def parse_args():
+    settings_msg = 'Bring torrents from one Gazelle instance to another'
+    parser = GooeyParser(description=settings_msg)
 
-layout = [
-    [sg.Text('GazelleSync 5.0.5 - DIC Variant', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
-    [sg.Text('(Note: You should edit config.cfg first, to include usernames and passwords of all relevant trackers)', font=("Helvetica", 8))],
-    [sg.Text('(Note: This .py should be in the same directory as the other .py files)', font=( "Helvetica", 8))],
-    [sg.Text('From: ', font=("Helvetica", 15)), sg.InputCombo(('OPS', 'RED', 'NWCD', 'DIC'), key='_from_', default_value='none'), sg.Text('To :', font=("Helvetica", 15)), sg.InputCombo(('OPS', 'RED', 'NWCD', 'DIC'), key='_to_', default_value='none')],
-    [sg.Text('1) Fetch the torrent info from source tracker :', font=("Helvetica", 20))],
-    [sg.Text('Method A - using Source Tracker permalink', font=("Helvetica", 15))],
-    [sg.InputText(key='_permalink_')],
-    [sg.Text('The Source Tracker Permalink can be either of these three forms:', font=("Helvetica", 8))],
-    [sg.Text('https://source.tracker/torrents.php?torrentid=1', font=("Helvetica", 8))],
-    [sg.Text('https://source.tracker/torrents.php?id=1&torrentid=1#torrent1', font=("Helvetica", 8))],
-    [sg.Text('https://source.tracker/torrents.php?id=1&torrentid=1', font=("Helvetica", 8))],
-    [sg.Text('Method B - using Source Tracker .torrent file', font=("Helvetica", 15))],
-    [sg.Text('Choose a .torrent file', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText(key='_torrentFile_'), sg.FileBrowse(file_types=(("ALL Files", ".torrent"),))],
-    [sg.Text('Method C - using a folder of torrents', font=("Helvetica", 15))],
-    [sg.Text('Choose a folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText(key='_torrentFolder_'), sg.FolderBrowse()],
-    [sg.Text('2) Select the Music Folder(s)', font=("Helvetica", 20))],
-    [sg.InputCombo(('Single Mode', 'Bash Mode'), size=(20, 1), key='_singleOrBash_'), sg.InputText(key='_musicFolder_'), sg.FolderBrowse()],
-    [sg.Text('Single Mode : Please browse to the directory that contains the actual music files', font=("Helvetica", 8))],
-    [sg.Text('Bash Mode : Please browse to the directory ABOVE your music directory (or directories)!', font=("Helvetica", 8))],
-    [sg.Text('_' * 80)],
-    [sg.Submit(button_text='Go! Go! Go! (Let\'s rip)', key='_goGo_'), sg.Exit(button_text='Exit')]
-]
+    # --from <>
+    parser.add_argument(
+        '--from',
+        choices=trackers,
+        required=True,
+        help="torrents from which Gazelle instance"
+    )
 
+    # -to <>
+    parser.add_argument(
+        "--to",
+        choices=trackers,
+        required=True,
+        help="sync to which Gazelle instance"
+    )
 
-window = sg.Window('Gazelle -> Gazelle (5.0)', layout, default_element_size=(40, 1), grab_anywhere=False, icon=resource_path("favicon.ico"))
-event, values = window.Read()
+    # --album <> / --folder <>
+    group = parser.add_mutually_exclusive_group(
+        required=True,
+        gooey_options={
+            'initial_selection': 0
+        }
+    )
+    group.add_argument(
+        "--album",
+        help="the folder of the album",
+        widget="DirChooser"
+    )
+    group.add_argument(
+        "--folder",
+        help="the folder that contauins all albums. The album folder will be extracted from the site metadata",
+        widget="DirChooser"
+    )
 
-while True:
-    event, values = window.Read()
-    callMovePy = ''
-    if event == '_goGo_':
-        callMovePy = move_cmd + ' --from=' + \
-            values['_from_'].lower() + ' --to=' + values['_to_'].lower()
-        if len(values['_permalink_']) > 0:
-            callMovePy += ' --link="' + values['_permalink_'] + '"'
-        elif len(values['_torrentFile_']) > 0:
-            callMovePy += ' --tpath="' + values['_torrentFile_'] + '"'
-        elif len(values['_torrentFolder_']) > 0:
-            callMovePy += ' --tfolder="' + values['_torrentFolder_'] + '"'
+    # --tid <> / --link <> / --tpath <> / --tfolder <>
+    group = parser.add_mutually_exclusive_group(required=True,
+                                                gooey_options={
+                                                    'initial_selection': 0
+                                                })
+    group.add_argument(
+        "--link",
+        help="the whole permalinlk. The tool os smart enough to extract it"
+    )
+    group.add_argument(
+        "--tid",
+        help="the torrent ID"
+    )
+    group.add_argument(
+        "--tpath",
+        help="the path that points towards the .torrent file. The infohash will be computed",
+        widget="FileChooser"
+    )
+    group.add_argument(
+        "--tfolder",
+        help="the folder containing all the .torrent files",
+        widget="DirChooser"
+    )
 
-        if values['_singleOrBash_'] == 'Single Mode':
-            callMovePy += ' --album="' + values['_musicFolder_'] + '"'
-        elif values['_singleOrBash_'] == 'Bash Mode':
-            callMovePy += ' --folder="' + values['_musicFolder_'] + '"'
-        os.system(callMovePy)
-    elif event is None or event == 'Exit':
-        break
-window.Close()
+    parser.add_argument(
+        '-c', '--config',
+        metavar='FILE',
+        default=os.path.join(application_path, 'config.cfg'),
+        help='config file with login details (default: config.cfg)',
+        widget="FileChooser"
+    )
+
+    return parser.parse_args()
+
+def main():
+    args = parse_args()
+
+    # get original command line arguments
+    argv = []
+    for arg in vars(args):
+        value = getattr(args, arg)
+        if value:
+            argv.append("--" + arg)
+            argv.append(value)
+
+    # execute real command with the same arguments
+    real_command_code = os.path.join(application_path, "gs-cli.py")
+    real_command_exe = os.path.join(application_path, "gs-cli")
+    real_command_exe_win = os.path.join(application_path, "gs-cli.exe")
+    real_command_exe_unix = real_command_exe
+    if os.path.isfile(real_command_exe_win) or os.path.isfile(real_command_exe_unix):
+        argv.insert(0, real_command_exe)
+    else:
+        argv.insert(0, real_command_code)
+        argv.insert(0, "python")
+
+    print(argv)
+    return subprocess.call(argv)
+
+if __name__ == "__main__":
+    sys.exit(main())
