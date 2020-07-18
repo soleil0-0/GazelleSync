@@ -20,9 +20,17 @@ trackers = {
     "dic",
 }
 
+def remove_suffix(text, suffix):
+    if text is not None and suffix is not None:
+        return text[:-len(suffix)] if text.endswith(suffix) else text
+    else:
+        return text
+
 # determine if application is a script file or frozen exe
 if getattr(sys, 'frozen', False):
     application_path = os.path.dirname(os.path.realpath(sys.executable))
+    if sys.platform == "darwin":
+        application_path = remove_suffix(application_path, "/{0}.app/Contents/MacOS".format(os.path.basename(sys.executable)))
 elif __file__:
     application_path = os.path.dirname(os.path.realpath(__file__))
 
