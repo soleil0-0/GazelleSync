@@ -33,7 +33,7 @@ elif __file__:
        language="chinese",
        program_name="GazelleSync GUI")
 def parse_args():
-    settings_msg = 'Bring torrents from one Gazelle instance to another'
+    settings_msg = 'Gazelle 站点的转载工具'
     parser = GooeyParser(description=settings_msg)
 
     # --from <>
