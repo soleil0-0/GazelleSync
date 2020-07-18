@@ -494,8 +494,10 @@ def moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir):
     t.set_source(source)
     t.save("torrent/"+tpath)
 
-    destAPI.upload(folder, tempfolder, album, g_tags,
+    ret = destAPI.upload(folder, tempfolder, album, g_tags,
              g_wikiImage, artists, "torrent/"+tpath)
+    if not ret:
+        exit(1)
 
     if watch_dir:
         copyfile(
