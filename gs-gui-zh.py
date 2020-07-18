@@ -1,79 +1,133 @@
-#!/usr/bin/env Python3
-import PySimpleGUI as sg
-import os
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# imports: standard
+from __future__ import unicode_literals
+from __future__ import print_function
 import sys
+from time import sleep
+import os
+import subprocess
 
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-    return os.path.join(base_path, relative_path)
+# imports: third party
+from gooey import Gooey, GooeyParser
 
-def is_exe(fpath):
-    return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+# contants
+trackers = {
+    "red",
+    "ops",
+    "nwcd",
+    "dic",
+}
 
 # determine if application is a script file or frozen exe
 if getattr(sys, 'frozen', False):
-    application_path = os.path.dirname(sys.executable)
+    application_path = os.path.dirname(os.path.realpath(sys.executable))
 elif __file__:
-    application_path = os.path.dirname(__file__)
-move_cmd = "python gs-cli.py"
-if is_exe(os.path.join(application_path, "gs-cli.exe")) or is_exe(os.path.join(application_path, "gs-cli")):
-    move_cmd = os.path.join(application_path, "gs-cli")
+    application_path = os.path.dirname(os.path.realpath(__file__))
 
-sg.ChangeLookAndFeel('DarkBlue')
+@Gooey(optional_cols=2,
+       default_size=(610, 740),
+       show_success_modal=False,
+       show_failure_modal=False,
+       language="chinese",
+       program_name="GazelleSync GUI")
+def parse_args():
+    settings_msg = 'Bring torrents from one Gazelle instance to another'
+    parser = GooeyParser(description=settings_msg)
 
-layout = [
-    [sg.Text('GazelleSync 5.0.5 - DIC Variant', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_RIDGE)],
-    [sg.Text('(注意：首先，你需要编辑 config.cfg，在其中添加所有相关站点的用户名和密码。)', font=("Microsoft YaHei", 10))],
-    [sg.Text('(注意：本 .py 文件应与其他 .py 文件处于同一目录下。)', font=("Microsoft YaHei", 10))],
-    [sg.Text('从：', font=("Times", 15)), sg.InputCombo(('OPS', 'RED', 'NWCD', 'DIC'), key='_from_', default_value='none'), sg.Text('到：', font=("Times", 15)), sg.InputCombo(('OPS', 'RED', 'NWCD', 'DIC'), key='_to_', default_value='none')],
-    [sg.Text('1) 从来源站点获取种子信息：', font=("Microsoft YaHei", 16))],
-    [sg.Text('方法一：使用来源站点的种子永久链接（PL）', font=("Microsoft YaHei", 13))],
-    [sg.InputText(key='_permalink_')],
-    [sg.Text('来源站点的种子永久链接可能存在以下三种形式：', font=("Microsoft YaHei", 10))],
-    [sg.Text('https://source.tracker/torrents.php?torrentid=1', font=("Microsoft YaHei", 10))],
-    [sg.Text('https://source.tracker/torrents.php?id=1&torrentid=1#torrent1', font=("Microsoft YaHei", 10))],
-    [sg.Text('https://source.tracker/torrents.php?id=1&torrentid=1', font=("Microsoft YaHei", 10))],
-    [sg.Text('方法二：使用来源站点的种子文件', font=("Microsoft YaHei", 13))],
-    [sg.Text('指定种子文件目录：', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText(key='_torrentFile_'), sg.FileBrowse(file_types=(("ALL Files", ".torrent"),))],
-    [sg.Text('方法三：使用一个包含种子文件的文件夹', font=("Microsoft YaHei", 13))],
-    [sg.Text('指定文件夹目录：', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText(key='_torrentFolder_'), sg.FolderBrowse()],
-    [sg.Text('2) 指定音乐文件夹', font=("Microsoft YaHei", 16))],
-    [sg.InputCombo(('单种模式', '批量模式'), size=(20, 1), key='_singleOrBash_'), sg.InputText(key='_musicFolder_'), sg.FolderBrowse()],
-    [sg.Text('单种模式：请指定直接包含音乐文件的目录。', font=("Microsoft YaHei", 10))],
-    [sg.Text('批量模式：请指定直接包含音乐文件目录的上层目录。', font=("Microsoft YaHei", 10))],
-    [sg.Text('_' * 80)],
-    [sg.Submit(button_text='运行', key='_goGo_'), sg.Exit(button_text='退出', key='_exit_')]
-]
+    # --from <>
+    parser.add_argument(
+        '--from',
+        choices=trackers,
+        required=True,
+        help="来源"
+    )
 
+    # -to <>
+    parser.add_argument(
+        "--to",
+        choices=trackers,
+        required=True,
+        help="同步到"
+    )
 
-window = sg.Window('Gazelle -> Gazelle (5.0)', layout,
-                   default_element_size=(40, 1), grab_anywhere=False, icon=resource_path("favicon.ico"))
+    # --album <> / --folder <>
+    group = parser.add_mutually_exclusive_group(
+        required=True,
+        gooey_options={
+            'initial_selection': 0
+        }
+    )
+    group.add_argument(
+        "--album",
+        help="单种模式：请指定直接包含音乐文件的目录",
+        widget="DirChooser"
+    )
+    group.add_argument(
+        "--folder",
+        help="批量模式：请指定直接包含音乐文件目录的上层目录",
+        widget="DirChooser"
+    )
 
-event, values = window.Read()
+    # --tid <> / --link <> / --tpath <> / --tfolder <>
+    group = parser.add_mutually_exclusive_group(required=True,
+                                                gooey_options={
+                                                    'initial_selection': 0
+                                                })
+    group.add_argument(
+        "--link",
+        help="使用来源站点的种子永久链接（PL）"
+    )
+    group.add_argument(
+        "--tid",
+        help="使用来源站点的种子id（torrentid）"
+    )
+    group.add_argument(
+        "--tpath",
+        help="使用来源站点的种子文件",
+        widget="FileChooser"
+    )
+    group.add_argument(
+        "--tfolder",
+        help="使用一个包含种子文件的文件夹",
+        widget="DirChooser"
+    )
 
-while True:
-    event, values = window.Read()
-    callMovePy = ''
-    if event == '_goGo_':
-        callMovePy = move_cmd + ' --from=' + \
-            values['_from_'].lower() + ' --to=' + values['_to_'].lower()
-        if len(values['_permalink_']) > 0:
-            callMovePy += ' --link="' + values['_permalink_'] + '"'
-        elif len(values['_torrentFile_']) > 0:
-            callMovePy += ' --tpath="' + values['_torrentFile_'] + '"'
-        elif len(values['_torrentFolder_']) > 0:
-            callMovePy += ' --tfolder="' + values['_torrentFolder_'] + '"'
+    parser.add_argument(
+        '-c', '--config',
+        metavar='FILE',
+        default=os.path.join(application_path, 'config.cfg'),
+        help='包含登陆凭证的配置文件 (默认: config.cfg)',
+        widget="FileChooser"
+    )
 
-        if values['_singleOrBash_'] == '单种模式':
-            callMovePy += ' --album="' + values['_musicFolder_'] + '"'
-        elif values['_singleOrBash_'] == '批量模式':
-            callMovePy += ' --folder="' + values['_musicFolder_'] + '"'
-        os.system(callMovePy)
-    elif event is None or event == '_exit_':
-        break
-window.Close()
+    return parser.parse_args()
+
+def main():
+    args = parse_args()
+
+    # get original command line arguments
+    argv = []
+    for arg in vars(args):
+        value = getattr(args, arg)
+        if value:
+            argv.append("--" + arg)
+            argv.append(value)
+
+    # execute real command with the same arguments
+    real_command_code = os.path.join(application_path, "gs-cli.py")
+    real_command_exe = os.path.join(application_path, "gs-cli")
+    real_command_exe_win = os.path.join(application_path, "gs-cli.exe")
+    real_command_exe_unix = real_command_exe
+    if os.path.isfile(real_command_exe_win) or os.path.isfile(real_command_exe_unix):
+        argv.insert(0, real_command_exe)
+    else:
+        argv.insert(0, real_command_code)
+        argv.insert(0, "python")
+
+    print(argv)
+    return subprocess.call(argv)
+
+if __name__ == "__main__":
+    sys.exit(main())
