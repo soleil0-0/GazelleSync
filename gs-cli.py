@@ -330,7 +330,7 @@ artistImportances = {
 }
 
 
-def moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir):
+def moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir, nolog):
     logging.info(str(parsedArgs))
     data = None
 
@@ -495,7 +495,7 @@ def moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir):
     t.save("torrent/"+tpath)
 
     ret = destAPI.upload(folder, tempfolder, album, g_tags,
-             g_wikiImage, artists, "torrent/"+tpath)
+             g_wikiImage, artists, "torrent/"+tpath, nolog)
     if not ret:
         sys.exit(1)
 
@@ -575,10 +575,18 @@ def main():
     )
 
     parser.add_argument(
-            '-c', '--config',
-            metavar='FILE',
-            default=os.path.join(application_path, 'config.cfg'),
-            help='config file with login details (default: %(default)s)'
+        '--nolog',
+        dest='nolog',
+        action='store_true',
+        help='disable upload of log file'
+    )
+    parser.set_defaults(nolog = False)
+
+    parser.add_argument(
+        '-c', '--config',
+        metavar='FILE',
+        default=os.path.join(application_path, 'config.cfg'),
+        help='config file with login details (default: %(default)s)'
     )
 
     # print help message when no option is given
@@ -591,7 +599,6 @@ def main():
 
     loglevel = args.loglevel
 
-    config_file = args.config
     gazelle_from = args.from_
     gazelle_to = args.to
 
@@ -602,6 +609,9 @@ def main():
     link = args.link
     tpath = args.tpath
     tfolder = args.tfolder
+
+    nolog = args.nolog
+    config_file = args.config
 
     # set up logging
     numeric_level = getattr(logging, loglevel.upper(), None)
@@ -679,14 +689,14 @@ def main():
                         localParsed["tfolder"], filename)
                     localParsed["hash"] = getTorrentHash(localParsed["tpath"])
                     logging.info(str(localParsed))
-                    moveAlbum(localParsed, sourceAPI, destAPI, source)
+                    moveAlbum(localParsed, sourceAPI, destAPI, source, nolog=nolog)
                 except Exception as e:
                     fails += 1
                 logging.info("Success rate: %s".format(1 - fails/total))
         logging.info("Success rate: %s".format(1 - fails/total))
     else:
         logging.info("Single mode")
-        moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir)
+        moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir, nolog)
 
 if __name__ == "__main__":
     main()
