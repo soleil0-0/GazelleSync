@@ -182,15 +182,18 @@ class WhatAPI:
 		except ValueError:
 			raise RequestException
 
-	def upload(self, album_dir, output_dir, album, tags, artwork_url, artists, torrentpath):
+	def upload(self, album_dir, output_dir, album, tags, artwork_url, artists, torrentpath, nolog):
 		url = self.url + "/upload.php"
 		torrent = ('torrent.torrent', open(torrentpath, 'rb'), "application/octet-stream")
-		logfiles = locate(album_dir, ext_matcher('.log'))
-		logfiles = [(str(i) + '.log', open(logfile, 'rb'), "application/octet-stream") for i, logfile in enumerate(logfiles)]
+		logfiles = []
+		if not nolog:
+			logfiles = locate(album_dir, ext_matcher('.log'))
+			logfiles = [(str(i) + '.log', open(logfile, 'rb'), "application/octet-stream") for i, logfile in enumerate(logfiles)]
 		r = self.session.get(url)
 		auth = re.search('name="auth" value="([^"]+)"', r.text).group(1)
 		data, files = create_upload_request(auth, album, torrent, logfiles, tags, artwork_url, artists)
 		logging.info(data)
+		logging.info(files)
 		upload_headers = dict(headers)
 		upload_headers["referer"] = url
 		upload_headers["origin"] = url.rsplit("/", 1)[0]

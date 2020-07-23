@@ -110,6 +110,14 @@ def parse_args():
         widget="FileChooser"
     )
 
+    parser.add_argument(
+        '--nolog',
+        dest='nolog',
+        action='store_true',
+        help='取消日志上传'
+    )
+    parser.set_defaults(nolog = False)
+
     return parser.parse_args()
 
 def main():
@@ -121,7 +129,8 @@ def main():
         value = getattr(args, arg)
         if value:
             argv.append("--" + arg)
-            argv.append(value)
+            if arg != 'nolog':
+                argv.append(value)
 
     # execute real command with the same arguments
     real_command_code = os.path.join(application_path, "gs-cli.py")
