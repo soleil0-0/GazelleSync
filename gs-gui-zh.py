@@ -110,13 +110,13 @@ def parse_args():
         widget="FileChooser"
     )
 
-    parser.add_argument(
-        '--nolog',
-        dest='nolog',
-        action='store_true',
-        help='取消日志上传'
-    )
-    parser.set_defaults(nolog = False)
+    # parser.add_argument(
+    #     '--nolog',
+    #     dest='nolog',
+    #     action='store_true',
+    #     help='取消日志上传'
+    # )
+    # parser.set_defaults(nolog = False)
 
     return parser.parse_args()
 
