@@ -17,8 +17,8 @@ gooey = "*"
 python_version = "3.7"
 
 [scripts]
-dev = "sh -c \"set -ex; cp -v config.cfg.spec config.cfg; find . -name '*.py' -print0 | xargs -0 -I% sed -i'.bak' -e 's#https://tracker.dicmusic.club#http://pt.kshare.club:34000#g;s#https://dicmusic.club#http://pt.kshare.club#g' '%'; rm *.bak;\""
-dev_undo = "sh -c \"git checkout config.cfg; find . -name '*.py' -print0 | xargs -0 -I% sed -i'.bak' -e 's#http://pt.kshare.club:34000#https://tracker.dicmusic.club#g;s#http://pt.kshare.club#https://dicmusic.club#g' '%'; rm *.bak;\""
+dev = "sh -c \"set -ex; cp -v config.cfg.spec config.cfg; find . -name '*.py' -print0 | xargs -0 -I% sed -i'.bak' -e 's#https://tracker.dicmusic.club#http://pt.kshare.club:34000#g;s#https://dicmusic.club#http://x3078z8898.zicp.vip:7480#g' '%'; rm *.bak;\""
+dev_undo = "sh -c \"git checkout config.cfg; find . -name '*.py' -print0 | xargs -0 -I% sed -i'.bak' -e 's#http://pt.kshare.club:34000#https://tracker.dicmusic.club#g;s#http://x3078z8898.zicp.vip:7480#https://dicmusic.club#g' '%'; rm *.bak;\""
 gui_en = "python gs-gui-en.py"
 gui_zh = "python gs-gui-zh.py"
 cli = "python gs-cli.py --from red --to dic --album \"../2013 - The Best Of Keane - Deluxe Edition (FLAC)\" --link \"https://redacted.ch/torrents.php?torrentid=1012753\""
