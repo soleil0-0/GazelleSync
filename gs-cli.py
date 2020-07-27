@@ -213,8 +213,12 @@ def getReleases(tracker, response, artist_name, group_name):
 
 
 def isSame(first, second, what):
-    logging.info(str((what, first[what], second[what], first[what] == second[what])))
-    return first[what] == second[what]
+    if what in first and what in second:
+        logging.info(str((what, first[what], second[what], first[what] == second[what])))
+        return first[what] == second[what]
+    else:
+        logging.info("{} not exist in {} and {} at the same time, treat as same".format(what, first['id'], second['torrentId']))
+        return True
 
 
 def filterResults(meta, ts):
@@ -370,7 +374,7 @@ def moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir, nolog):
     logging.info("Duplicate: %s" % isDupe)
 
     if isDupe:
-        return
+        sys.exit(1)
 
     t_media = tdata["media"]
     t_format = tdata["format"]
