@@ -12,6 +12,7 @@ import html
 from html.parser import HTMLParser
 import configparser
 import logging
+from http.cookies import SimpleCookie
 
 # imports: third party
 import requests
@@ -33,6 +34,15 @@ if getattr(sys, 'frozen', False):
     application_path = os.path.dirname(sys.executable)
 elif __file__:
     application_path = os.path.dirname(__file__)
+
+def getCookieDict(cookie_str):
+    cookies = {}
+
+    cookie = SimpleCookie()
+    cookie.load(cookie_str)
+    for key, morsel in cookie.items():
+        cookies[key] = morsel.value
+    return cookies
 
 class MyConfigParser(configparser.RawConfigParser):
     def get(self, section, option):
@@ -638,10 +648,10 @@ def main():
 
     from_username = config.get(gazelle_from, 'username')
     from_password = config.get(gazelle_from, 'password')
-    from_cookie = config.get(gazelle_from, 'cookie')
+    from_cookie = getCookieDict(config.get(gazelle_from, 'cookie'))
     to_username = config.get(gazelle_to, 'username')
     to_password = config.get(gazelle_to, 'password')
-    to_cookie = config.get(gazelle_to, 'cookie')
+    to_cookie = getCookieDict(config.get(gazelle_to, 'cookie'))
     watch_dir = config.get("common", "watch_dir")
     
     sourceAPI = generateSourceTrackerAPI(gazelle_from, from_username, from_password, from_cookie)
