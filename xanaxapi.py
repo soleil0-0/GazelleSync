@@ -46,13 +46,13 @@ class XanaxAPI:
 		self.rate_limit = 2.0 # seconds between requests
 		self.site = "APL"
 		if cookie:
-			self.session.headers['cookie'] = cookie
+			requests.utils.add_dict_to_cookiejar(self.session.cookies, cookie)
 			try:
 				logging.info("use cookie to invoke api of <%s>" % self.site)
 				self._auth()
 			except RequestException:
 				logging.info("cookie invalid, login <%s> with password instead" % self.site)
-				del self.session.headers['cookie']
+				self.session.cookies.clear()
 				self._login()
 		else:
 			logging.info("login with password")
