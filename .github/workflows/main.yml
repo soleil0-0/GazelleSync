@@ -1,0 +1,73 @@
+name: Upload Release Asset
+
+on:
+  push:
+    tags:
+      - "*"
+  issues:
+    types: [opened]
+
+jobs:
+  build_ubuntu:
+    name: Build Release Asset - Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.7.4"
+      - name: Install packages
+        run: sudo apt-get -y install libgtk-3-dev libglu1-mesa-dev
+      - name: Install Dependencies
+        run: |
+          pip install -U pipenv
+          pipenv install --three --dev
+      - name: Build project
+        run: |
+          echo TODO
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: gs_linux_amd64.zip
+      #     path: dist/gs_linux_amd64.zip
+
+  build_macos:
+    name: Build Release Asset - MacOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.7.4"
+      - name: Install Dependencies
+        run: |
+          pip install -U pipenv
+          pipenv install --three --dev
+      - name: Build project
+        run: pipenv run build_osx
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: gs_darwin_amd64.zip
+      #     path: dist/gs_darwin_amd64.zip
+
+  build_windows:
+    name: Build Release Asset - Windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.7.4"
+      - name: Install Dependencies
+        run: |
+          pip install -U pipenv
+          pipenv install --three --dev
+      - name: Build project
+        run: |
+          pipenv run build_win
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: gs_windows_amd64.zip
+      #     path: dist/gs_windows_amd64.zip
