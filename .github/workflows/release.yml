@@ -1,0 +1,95 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*"
+  pull_request:
+    branches:
+      - "*"
+  issues:
+    types: [pinned]
+
+jobs:
+  create_release:
+    name: Create release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+
+  build_release:
+    name: Build release
+    needs: create_release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            zip_name: gs_linux_amd64
+          - os: macos-latest
+            zip_name: gs_darwin_amd64
+          - os: windows-latest
+            zip_name: gs_windows_amd64
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.7.8"
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip
+          pip install -U pipenv
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            sudo apt-get update -y -qq
+            sudo apt-get install -y libwxgtk3.0 libsdl1.2debian
+
+            pipenv --three
+            pipenv run pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 --trusted-host extras.wxpython.org wxPython==4.0.7
+            pipenv run pip install requests mechanize gooey pyinstaller "setuptools>=49.1.1"
+          else
+            pipenv install --three --dev --skip-lock
+          fi
+        shell: bash
+      - name: Build project
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            pipenv run build_linux
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            pipenv run build_osx
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+            pipenv run build_win
+          else
+            echo "$RUNNER_OS not supported"
+            exit 1
+          fi
+        shell: bash
+      - name: Archive artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.zip_name }}
+          path: |
+            dist/*
+            !dist/${{ matrix.zip_name }}.zip
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ./dist/${{ matrix.zip_name }}.zip
+          asset_name: ${{ matrix.zip_name }}.zip
+          asset_content_type: application/zip
