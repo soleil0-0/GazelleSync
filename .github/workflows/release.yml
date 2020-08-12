@@ -58,7 +58,8 @@ jobs:
 
             pipenv --three
             pipenv run pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 --trusted-host extras.wxpython.org wxPython==4.0.7
-            pipenv run pip install requests mechanize gooey pyinstaller "setuptools>=49.1.1"
+            pipenv run pip install requests mechanize pyinstaller "setuptools>=49.1.1"
+            pipenv run pip install -U https://github.com/soleil0-0/Gooey/archive/1.0.5-release.zip
           else
             pipenv install --three --dev --skip-lock
           fi
