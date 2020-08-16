@@ -390,12 +390,18 @@ def moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir, nolog):
     t_format = tdata["format"]
     t_encoding = tdata["encoding"]
     if tdata["description"] == "":
-        t_description = "Uploaded with GazelleSync ("+parsedArgs["from"].upper(
-        )+" to "+parsedArgs["to"].upper()+"). Many thanks to the original uploader!"
+        t_description = "Uploaded with GazelleSync (" \
+            + parsedArgs["from"].upper() + " to "+parsedArgs["to"].upper() \
+            + "). Many thanks to " \
+            + ("[url=" + parsedArgs["link"] + "]the original uploader[/url]" if "link" in parsedArgs else "the original uploader") \
+            + "!"
     else:
-        t_description = "Content of the original Description field at " + parsedArgs["from"].upper() + " (it may be empty) : [quote]" + tdata["description"] + \
-            "[/quote]" + "\n\nUploaded with GazelleSync ("+parsedArgs["from"].upper(
-        )+" to "+parsedArgs["to"].upper()+"). Many thanks to the original uploader!"
+        t_description = "Content of the original Description field at " \
+            + parsedArgs["from"].upper() + " (it may be empty) : [quote]" + tdata["description"] \
+            + "[/quote]" + "\n\nUploaded with GazelleSync (" + parsedArgs["from"].upper() \
+            + " to "+parsedArgs["to"].upper() + "). Many thanks to " \
+            + ("[url=" + parsedArgs["link"] + "]the original uploader[/url]" if "link" in parsedArgs else "the original uploader") \
+            + "!"
 
     t_remasterYear = tdata["remasterYear"]
     t_remasterCatalogueNumber = tdata["remasterCatalogueNumber"]
