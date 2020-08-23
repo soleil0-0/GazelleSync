@@ -8,6 +8,7 @@ import sys
 from time import sleep
 import os
 import subprocess
+import codecs
 
 # imports: third party
 from gooey import Gooey, GooeyParser
@@ -19,6 +20,10 @@ trackers = {
     "nwcd",
     "dic",
 }
+if sys.stdout.encoding != 'UTF-8':
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+if sys.stderr.encoding != 'UTF-8':
+    sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
 
 def remove_suffix(text, suffix):
     if text is not None and suffix is not None:
@@ -47,17 +52,19 @@ def parse_args():
     # --from <>
     parser.add_argument(
         '--from',
+        metavar='From',
         choices=trackers,
         required=True,
-        help="来源"
+        help="来源站点"
     )
 
     # -to <>
     parser.add_argument(
         "--to",
+        metavar='To',
         choices=trackers,
         required=True,
-        help="同步到"
+        help="目标站点"
     )
 
     # --album <> / --folder <>
@@ -69,11 +76,13 @@ def parse_args():
     )
     group.add_argument(
         "--album",
+        metavar='Album',
         help="单种模式：请指定直接包含音乐文件的目录",
         widget="DirChooser"
     )
     group.add_argument(
         "--folder",
+        metavar='Folder',
         help="批量模式：请指定直接包含音乐文件目录的上层目录",
         widget="DirChooser"
     )
@@ -85,26 +94,30 @@ def parse_args():
                                                 })
     group.add_argument(
         "--link",
+        metavar='PL Link',
         help="使用来源站点的种子永久链接（PL）"
     )
     group.add_argument(
         "--tid",
+        metavar='Torrent ID',
         help="使用来源站点的种子id（torrentid）"
     )
     group.add_argument(
         "--tpath",
+        metavar='Torrent Path',
         help="使用来源站点的种子文件",
         widget="FileChooser"
     )
     group.add_argument(
         "--tfolder",
+        metavar='Torrent Folder',
         help="使用一个包含种子文件的文件夹",
         widget="DirChooser"
     )
 
     parser.add_argument(
         '-c', '--config',
-        metavar='FILE',
+        metavar='Config File Path',
         default=os.path.join(application_path, 'config.cfg'),
         help='包含登陆凭证的配置文件 (默认: config.cfg)',
         widget="FileChooser"

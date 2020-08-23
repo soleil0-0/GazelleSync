@@ -8,6 +8,7 @@ import sys
 from time import sleep
 import os
 import subprocess
+import codecs
 
 # imports: third party
 from gooey import Gooey, GooeyParser
@@ -19,6 +20,10 @@ trackers = {
     "nwcd",
     "dic",
 }
+if sys.stdout.encoding != 'UTF-8':
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+if sys.stderr.encoding != 'UTF-8':
+    sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
 
 def remove_suffix(text, suffix):
     if text is not None and suffix is not None:
@@ -46,6 +51,7 @@ def parse_args():
     # --from <>
     parser.add_argument(
         '--from',
+        metavar='From',
         choices=trackers,
         required=True,
         help="torrents from which Gazelle instance"
@@ -54,6 +60,7 @@ def parse_args():
     # -to <>
     parser.add_argument(
         "--to",
+        metavar='To',
         choices=trackers,
         required=True,
         help="sync to which Gazelle instance"
@@ -68,11 +75,13 @@ def parse_args():
     )
     group.add_argument(
         "--album",
+        metavar='Album',
         help="the folder of the album",
         widget="DirChooser"
     )
     group.add_argument(
         "--folder",
+        metavar='Folder',
         help="the folder that contauins all albums. The album folder will be extracted from the site metadata",
         widget="DirChooser"
     )
@@ -84,26 +93,30 @@ def parse_args():
                                                 })
     group.add_argument(
         "--link",
+        metavar='PL Link',
         help="the whole permalinlk. The tool os smart enough to extract it"
     )
     group.add_argument(
         "--tid",
+        metavar='Torrent ID',
         help="the torrent ID"
     )
     group.add_argument(
         "--tpath",
+        metavar='Torrent Path',
         help="the path that points towards the .torrent file. The infohash will be computed",
         widget="FileChooser"
     )
     group.add_argument(
         "--tfolder",
+        metavar='Torrent Folder',
         help="the folder containing all the .torrent files",
         widget="DirChooser"
     )
 
     parser.add_argument(
         '-c', '--config',
-        metavar='FILE',
+        metavar='Config File Path',
         default=os.path.join(application_path, 'config.cfg'),
         help='config file with login details (default: config.cfg)',
         widget="FileChooser"
