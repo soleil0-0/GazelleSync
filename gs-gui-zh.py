@@ -15,10 +15,10 @@ from gooey import Gooey, GooeyParser
 
 # contants
 trackers = {
-    "red",
-    "ops",
-    "nwcd",
-    "dic",
+    "RED",
+    "OPS",
+    "NWCD",
+    "DIC",
 }
 if sys.stdout.encoding != 'UTF-8':
     sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')

@@ -536,6 +536,7 @@ def main():
     parser.add_argument(
         '--from',
         choices=trackers,
+        type=str.lower,
         required=True,
         dest='from_',
         help="torrents from which Gazelle instance"
@@ -545,6 +546,7 @@ def main():
     parser.add_argument(
         "--to",
         choices=trackers,
+        type=str.lower,
         required=True,
         help="sync to which Gazelle instance"
     )
