@@ -99,11 +99,6 @@ def toUnicode(inp):
     else:
         return unicode(inp, sys.getfilesystemencoding())
 
-compulsory = {
-    "from",
-    "to",
-}
-
 trackers = {
     "ops",
     "red",
@@ -121,16 +116,6 @@ possible = {
     "tpath",
     "tfolder"
 }
-
-
-def validateTrackers(result):
-    result["to"] = result["to"].lower()
-    result["from"] = result["from"].lower()
-
-    if result["to"] == result["from"]:
-        return False
-
-    return (result["to"] in trackers) and (result["from"] in trackers)
 
 def parseLink(link):
     ids = re.findall("torrentid=(\d+)", link)
