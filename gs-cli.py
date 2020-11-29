@@ -334,7 +334,7 @@ def moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir, nolog):
     data = None
 
     if "hash" in parsedArgs:
-        logging.info(parsedArgs["hash"] + " " + len(parsedArgs["hash"]))
+        logging.info(parsedArgs["hash"] + " " + str(len(parsedArgs["hash"])))
         data = sourceAPI.get_torrent_info(hash=parsedArgs["hash"])
     else:
         TorrentIDsource = parsedArgs["tid"]
@@ -696,11 +696,12 @@ def main():
                         localParsed["tfolder"], filename)
                     localParsed["hash"] = getTorrentHash(localParsed["tpath"])
                     logging.info(str(localParsed))
-                    moveAlbum(localParsed, sourceAPI, destAPI, source, nolog=nolog)
+                    moveAlbum(localParsed, sourceAPI, destAPI, source, watch_dir, nolog=nolog)
                 except Exception as e:
+                    logging.exception(e)
                     fails += 1
-                logging.info("Success rate: %s".format(1 - fails/total))
-        logging.info("Success rate: %s".format(1 - fails/total))
+                logging.info("Success rate: {}".format(1 - fails/total))
+        logging.info("Success rate: {}".format(1 - fails/total))
     else:
         logging.info("Single mode")
         moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir, nolog)
