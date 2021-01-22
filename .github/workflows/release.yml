@@ -40,10 +40,10 @@ jobs:
             python_version: 3.7
           - os: macos-10.15
             zip_name: gs_darwin_amd64
-            python_version: 3.9
+            python_version: 3.8
           - os: windows-2019
             zip_name: gs_windows_amd64
-            python_version: 3.9
+            python_version: 3.8
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
