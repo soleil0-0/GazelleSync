@@ -360,7 +360,6 @@ def moveAlbum(parsedArgs, sourceAPI, destAPI, source, watch_dir, nolog):
     elif "folder" in parsedArgs:
         folder = os.path.join(
             parsedArgs["folder"], unescape(tdata["filePath"]))
-        logging.info("Folder:", folder, "====")
     else:
         raise Exception("Failed to find path")
 
