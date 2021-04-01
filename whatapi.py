@@ -138,6 +138,7 @@ class WhatAPI:
 		self.authkey = accountinfo['authkey']
 		self.passkey = accountinfo['passkey']
 		self.userid = accountinfo['id']
+		self.tracker = self.tracker.format(self.passkey)
 
 	def _login(self, tracker):
 		'''Logs in user and gets authkey from server'''
